@@ -13,7 +13,9 @@ signal fog_cleared(tiles: Array[Vector2i])
 signal fog_placed(tiles: Array[Vector2i])
 
 ## How many cities the player owns
-var cities: int
+var cities: int = 0
+## Max number of cities the player can place
+var max_cities: int = 1
 ## How many cards a player can have in their hand
 var hand_size: int = 7
 ## How much territory the player owns
@@ -70,7 +72,8 @@ func setup(game: Game, base_position: Vector2i, index: int):
 	# Claims territory in a 1-tile radius
 	game.claim_territory(base_position, 1, index)
 	# Places home base
-	game.place_city(base_position)
+	game.place_city(base_position, local_id)
+	max_cities = 1
 	cities = 1
 
 ## Called right before the player's turn begins
@@ -130,6 +133,20 @@ func remove_from_hand(index: int):
 	cards_removed.emit(old_hand, hand)
 	shuffle_card(card)
 
-## Calculates resources per turn
-func calculate_rpt():
-	rpt = 2 + (territory / 20)
+## Runs calculations that depend on territory owned
+func lost_territory(tiles: Array[Vector2i], board: Board):
+	territory -= len(tiles)
+	for tile in tiles:
+		if board.buildings[tile.x][tile.y] is City:
+			cities -= 1
+	rpt = 2 + (territory / 10)
+	max_cities = 1 + (territory / 20)
+
+
+func gained_territory(tiles: Array[Vector2i], board: Board):
+	territory += len(tiles)
+	for tile in tiles:
+		if board.buildings[tile.x][tile.y] is City:
+			cities += 1
+	rpt = 2 + (territory / 10)
+	max_cities = 1 + (territory / 20)

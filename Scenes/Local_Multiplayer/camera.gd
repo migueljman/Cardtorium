@@ -9,6 +9,7 @@ var mouse_button_down = false
 var dragging = false
 var drag_threshold = 30 # must drag this many pixels to be considered a drag
 signal selected_tile(Vector2)
+signal pressed_city_place(pos: Vector2i)
 var card_placement_allowed = false
 
 func _input(event):
@@ -30,6 +31,12 @@ func _input(event):
 			var drag_distance = initial_mouse_pos - drag_end_world_pos
 			position += drag_distance
 			initial_mouse_pos = drag_end_world_pos
+	elif event is InputEventKey and event.key_label == KEY_C:
+		var mouse_position = get_global_mouse_position()
+		var world_position = get_global_transform().affine_inverse().basis_xform_inv(mouse_position)
+		var tile_size = Vector2(64, 64)
+		var tile_coordinates = floor(world_position / tile_size)
+		pressed_city_place.emit(tile_coordinates)
 
 func _unhandled_key_input(event):
 	# Checks for up-down motion

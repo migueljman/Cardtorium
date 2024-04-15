@@ -83,10 +83,6 @@ func end_turn():
 	
 	# Lets other nodes know that a player has ended their turn
 	turn_ended.emit(prev, board.players[board.current_player])
-	
-	print("end turn clicked")
-	print(board.current_player)
-	print(board.turns)
 
 ## Claims territory in a radius for a player.
 ## Passing a -1 for the player parameter will unclaim territory.
@@ -109,12 +105,10 @@ func claim_territory(pos: Vector2i, radius: int, player: int = -2):
 			var old = board.territory[x][y]
 			board.territory[x][y] = player
 			if old != -1:
-				board.players[old].territory -= 1
-				board.players[old].calculate_rpt()
-			board.players[player].territory += 1
+				board.players[old].lost_territory([Vector2i(x, y)], board)
 			claimed.append(Vector2i(x, y))
 	# Emits signals
-	board.players[player].calculate_rpt()
+	board.players[player].gained_territory(claimed, board)
 	territory_claimed.emit(claimed, player)
 	render_topbar.emit(board.turns, board.players[player])
 
@@ -142,10 +136,14 @@ func remove_unit(unit: Unit):
 	unit_removed.emit(unit)
 
 ## Places a city
-func place_city(pos: Vector2i):
+func place_city(pos: Vector2i, player_index: int = -1):
+	if player_index == -1:
+		player_index = board.current_player
 	if board.buildings[pos.x][pos.y] != null:
 		return
 	var city: City = City.new()
 	city.position = 64 * pos
 	board.buildings[pos.x][pos.y] = city
+	board.players[player_index].cities += 1
+	render_topbar.emit(board.turns, board.players[player_index])
 	city_placed.emit(city)

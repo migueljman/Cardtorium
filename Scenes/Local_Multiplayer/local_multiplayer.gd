@@ -36,6 +36,7 @@ func _ready():
 	camera.selected_tile.connect(self.on_selected_tile)
 	hand_renderer.card_selected.connect(self.on_card_selected)
 	game.turn_ended.connect(on_turn_ended)
+	camera.pressed_city_place.connect(attempt_place_city)
 
 func on_card_selected(card_index: int):
 	selected_index = card_index
@@ -143,3 +144,24 @@ func claim_territory():
 	if active_unit.owned_by == game.board.territory[active_unit.pos.x][active_unit.pos.y]:
 		game.claim_territory(active_unit.pos, 1, active_unit.owned_by)
 	deselect_unit()
+
+## Attempts to place a city
+func attempt_place_city(pos: Vector2i):
+	if pos.x < 0 or pos.y < 0 or pos.x >= game.board.SIZE.x or pos.y >= game.board.SIZE.y:
+		return
+	if game.board.territory[pos.x][pos.y] != game.board.current_player:
+		return
+	var player: Player = game.board.players[game.board.current_player]
+	if player.max_cities <= player.cities:
+		return
+	for x_off in range(-1, 2):
+		if pos.x + x_off >= game.board.SIZE.x:
+			break
+		for y_off in range(-1, 2):
+			if pos.y + y_off >= game.board.SIZE.y:
+				break
+			if x_off == 0 and y_off == 0:
+				continue
+			elif game.board.buildings[pos.x + x_off][pos.y + y_off] is City:
+				return
+	game.place_city(pos)
