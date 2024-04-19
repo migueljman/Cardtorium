@@ -63,6 +63,9 @@ func place_card(card: Card, x: int, y: int):
 			board.units[x][y] = troop
 			troop.pos = Vector2i(x, y)
 			troop_placed.emit(troop, Vector2i(x, y))
+		# Places a building card
+		Card.CardType.BUILDING:
+			var building: Building = Building.new()
 
 ## Places the nth card in the player's hand onto the board at position x, y
 func place_from_hand(index: int, x: int, y: int):
