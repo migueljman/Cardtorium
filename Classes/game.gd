@@ -33,6 +33,8 @@ signal troop_toggle_act(troop: Troop)
 signal input_requested(options: Array[Vector2i])
 ## Emitted when the player makes a selection
 signal input_received(choice: Vector2i)
+## Emitted when a building is placed
+signal building_placed(building: Building, pos: Vector2i)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -56,10 +58,14 @@ func set_terrain(terrain: Board.Terrain, location: Array[Vector2i]):
 ## Takes a card as input, and creates a unit object from it
 func build_unit(card: Card) -> Unit:
 	match (card.type):
-		# Places a troop card
+		# Builds a troop card
 		Card.CardType.TROOP:
 			var troop: Troop = Troop.new(self, card)
 			return troop
+		# Builds a building card
+		Card.CardType.BUILDING:
+			var building: Building = Building.new(self, card)
+			return building
 	return null
 
 ## Places a unit at position x, y
@@ -70,6 +76,11 @@ func place_unit(unit: Unit, x: int, y: int):
 			unit.pos = Vector2i(x, y)
 			unit.owned_by = board.current_player
 			troop_placed.emit(unit, Vector2i(x, y))
+		Card.CardType.BUILDING:
+			board.buildings[x][y] = unit
+			unit.pos = Vector2i(x, y)
+			unit.owned_by = board.current_player
+			building_placed.emit(unit, Vector2i(x, y))
 
 ## Places the nth card in the player's hand onto the board at position x, y
 func place_from_hand(index: int, x: int, y: int, unit: Unit = null):

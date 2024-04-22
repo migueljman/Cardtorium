@@ -15,3 +15,12 @@ func setup(attribute_id: int, game: Game, building: Building):
     attribute = load("res://Attributes/Buildings/Data/attribute_{0}.tres".format({0: attribute_id}))
     parent = building
     board = game.board
+
+
+## Allows the building to perform some action
+func build_action() -> Action:
+    return null
+
+## Called when the turn ends.
+func reset():
+    pass

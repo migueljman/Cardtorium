@@ -40,7 +40,7 @@ func being_attacked(attacker: Unit, attack: int, attack_force: float) -> int:
 ## Returns a list of tiles that the unit can be placed on.
 ## Used to highlight squares that the troop can be placed on.
 ## TODO: Possibly add support for an attribute which modifies this method
-func get_placeable_tiles():
+func get_placeable_tiles() -> Array[Vector2i]:
     var tiles: Array[Vector2i] = []
     for x in range(game.board.SIZE.x):
         for y in range(game.board.SIZE.x):
@@ -54,4 +54,3 @@ func get_placeable_tiles():
                 continue
             tiles.append(Vector2i(x, y))
     return tiles
-            
