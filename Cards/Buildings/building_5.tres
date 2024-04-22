@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Card" load_steps=2 format=3 uid="uid://b2a1f6f6q3d7g"]
+
+[ext_resource type="Script" path="res://Classes/card.gd" id="1_l7r5j"]
+
+[resource]
+script = ExtResource("1_l7r5j")
+type = 1
+id = 5
+name = "Infirmary"
+rarity = 2
+health = 20
+attack = 0
+defense = 10
+attack_range = 0
+movement = 0
+cost = 12
+attributes = Array[int]([5])

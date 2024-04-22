@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Card" load_steps=2 format=3 uid="uid://dolpchsoumexl"]
+
+[ext_resource type="Script" path="res://Classes/card.gd" id="1_ar6jv"]
+
+[resource]
+script = ExtResource("1_ar6jv")
+type = 1
+id = 3
+name = "Barricade"
+rarity = 1
+health = 15
+attack = 0
+defense = 7
+attack_range = 0
+movement = 0
+cost = 6
+attributes = Array[int]([0, 4])

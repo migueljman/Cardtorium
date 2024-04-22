@@ -9,6 +9,8 @@ var attributes: Array[BuildingAttribute] = []
 var can_act: bool = false
 ## All actions that the building can take
 var actions: Array[Action]
+## The defense of the building
+var defense: int
 
 
 ## Creates a new building from a corresponding card
@@ -16,7 +18,7 @@ func _init(_game: Game, card: Card = null):
     # Loads stats
     base_stats = card
     game = _game
-    attack = base_stats.attack
+    defense = base_stats.defense
     health = base_stats.health
     rng = base_stats.attack_range
     owned_by = game.board.current_player
@@ -63,7 +65,7 @@ func reset(prev: int, player: Player):
     clear()
     can_act = true
 	# Sets all stats back to default
-    attack = base_stats.attack
+    defense = base_stats.defense
     rng = base_stats.attack_range
     # Runs through attributes
     for attr in attributes:
