@@ -4,21 +4,21 @@ extends Unit
 class_name Troop
 
 ## The troop id
-var id: int = 0
+@export var id: int = 0
 ## Whether or not the troop can move
-var can_move: bool = false
+@export var can_move: bool = false
 ## Whether or not the troop can attack
-var can_attack: bool = false
+@export var can_attack: bool = false
 ## Whether or not the troop can act
-var can_act: bool = false
+@export var can_act: bool = false
 ## Graph of tiles that the troop can move to.
 var move_graph = null
 ## Stores the troop's attributes
-var attributes: Array[TroopAttribute] = []
+@export var attributes: Array[TroopAttribute] = []
 ## Defense of the card
-var defense: int
+@export var defense: int
 ## Movement of the card
-var movement: int
+@export var movement: int
 ## All possible actions that the troop can take
 var actions: Array[Action]
 ## A list of all troops / buildings that this troop can attack
@@ -37,7 +37,7 @@ func _init(_game: Game, card: Card=null):
 	game.turn_ended.connect(reset)
 	# Loads attributes
 	for attribute_id in self.base_stats.attributes:
-		var attribute_file = load('res://Attributes/Troops/Logic/attribute_{0}.gd'.format({0:attribute_id}))
+		var attribute_file = load('res://Attributes/Troops/Logic/attribute_{0}.gd'.format({0: attribute_id}))
 		if attribute_file == null:
 			continue
 		var attribute: TroopAttribute = attribute_file.new()
@@ -53,8 +53,8 @@ func clear_fog():
 		if temp != null:
 			break
 	if temp == null:
-		for x_off in range(-1, 2):
-			for y_off in range(-1, 2):
+		for x_off in range( - 1, 2):
+			for y_off in range( - 1, 2):
 				var tile: Vector2i = pos + Vector2i(x_off, y_off)
 				if tile.x < 0 or tile.y < 0:
 					continue
@@ -156,7 +156,7 @@ func _calc_move_cost(strength: float, from: Vector2i, to: Vector2i) -> float:
 	var board = game.board
 	# Checks if destination is even on the board
 	if to.x < 0 or to.y < 0 or to.x >= board.SIZE.x or to.y >= board.SIZE.y:
-		return -1
+		return - 1
 	var dest_type: Board.Terrain = board.tiles[to.x][to.y]
 	# Check if the destination tile contains another troop, skip if it does
 	var unit_at_destination = board.units[to.x][to.y]
@@ -179,11 +179,11 @@ func _calc_move_cost(strength: float, from: Vector2i, to: Vector2i) -> float:
 		return - 1
 	# Checks for zone-of-control
 	var temp: Vector2i = Vector2i.ZERO
-	for x_off in range(-1, 2):
+	for x_off in range( - 1, 2):
 		temp.x = to.x + x_off
 		if temp.x < 0 or temp.x >= board.SIZE.x:
 			continue
-		for y_off in range(-1, 2):
+		for y_off in range( - 1, 2):
 			temp.y = to.y + y_off
 			if temp.y < 0 or temp.y >= board.SIZE.y:
 				continue
@@ -217,9 +217,9 @@ func build_attack_list():
 ## Called when the unit is attacked
 func being_attacked(attacker: Unit, atk: int, attack_force: float) -> int:
 	# Calculates your defense force
-	var def_force = self.defense * float(health)/float(base_stats.health)
+	var def_force = self.defense * float(health) / float(base_stats.health)
 	# Damages the unit
-	var damage = floor((attack_force/(attack_force+def_force))*atk)
+	var damage = floor((attack_force / (attack_force + def_force)) * atk)
 	health -= damage
 	# If the troop is dead, then it dies
 	if health <= 0:
@@ -230,14 +230,14 @@ func being_attacked(attacker: Unit, atk: int, attack_force: float) -> int:
 	for attr in attributes:
 		attr.on_attacked(attacker)
 	# Calculates counter damage
-	var counter_damage: int = floor((def_force/(attack_force+def_force))*defense)
+	var counter_damage: int = floor((def_force / (attack_force + def_force)) * defense)
 	return counter_damage
 
 ## Attacks another unit
 func attack_unit(defender: Unit):
 	if not can_attack:
 		return
-	var atk_force  = attack * float(self.health)/float(base_stats.health)
+	var atk_force = attack * float(self.health) / float(base_stats.health)
 	health -= defender.being_attacked(self, attack, atk_force)
 	# Prevents the unit from doing other actions
 	can_act = false
@@ -337,4 +337,3 @@ func act(index: int) -> bool:
 	if not can_act and not can_attack and not can_move:
 		game.troop_toggle_act.emit(self)
 	return input_needed
-
