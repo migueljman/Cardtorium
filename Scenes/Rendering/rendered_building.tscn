@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://cla8oiefotuw6"]
+
+[ext_resource type="Texture2D" uid="uid://0yr3ua3wvau3" path="res://Assets/Building Sprites/default_building.png" id="1_fancb"]
+[ext_resource type="Script" path="res://Scenes/Rendering/rendered_building.gd" id="1_vbjqf"]
+
+[node name="RenderedBuilding" type="Node2D"]
+script = ExtResource("1_vbjqf")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("1_fancb")
+centered = false
