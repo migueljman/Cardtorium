@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Attribute" load_steps=2 format=3 uid="uid://1hvx0d4kpagp"]
+
+[ext_resource type="Script" path="res://Classes/attribute.gd" id="1_2mxcs"]
+
+[resource]
+script = ExtResource("1_2mxcs")
+name = "Nourishment"
+description = "At the end of your turn, heals troops in a 2-tile radius"
+id = 5
+abbreviation = "NOUR"

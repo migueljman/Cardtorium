@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Attribute" load_steps=2 format=3 uid="uid://dm86n33anhdo"]
+
+[ext_resource type="Script" path="res://Classes/attribute.gd" id="1_oaj5u"]
+
+[resource]
+script = ExtResource("1_oaj5u")
+name = "Tall"
+description = "Fog removed in a 2-tile radius.  Units with good eyesight get +1 range"
+id = 6
+abbreviation = "TALL"

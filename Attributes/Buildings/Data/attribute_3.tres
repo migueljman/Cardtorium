@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Attribute" load_steps=2 format=3 uid="uid://bpv627olqpw6p"]
+
+[ext_resource type="Script" path="res://Classes/attribute.gd" id="1_e1y3m"]
+
+[resource]
+script = ExtResource("1_e1y3m")
+name = "Passage"
+description = "Disables terrain-based movement penalties, and gives a movement bonus to troops standing on it"
+id = 3
+abbreviation = "PASSAG"

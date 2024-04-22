@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Attribute" load_steps=2 format=3 uid="uid://ofcptr2u75ad"]
+
+[ext_resource type="Script" path="res://Classes/attribute.gd" id="1_q22hd"]
+
+[resource]
+script = ExtResource("1_q22hd")
+name = "Fire Resistant"
+description = "Takes x0.5 damage from fire attacks"
+id = 9
+abbreviation = "NOFIRE"

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Attribute" load_steps=2 format=3 uid="uid://p1f1ddamoce3"]
+
+[ext_resource type="Script" path="res://Classes/attribute.gd" id="1_fgkgl"]
+
+[resource]
+script = ExtResource("1_fgkgl")
+name = "Entrenched"
+description = "Gives the building zone-of-control (a movement penalty applied to enemy troops)"
+id = 13
+abbreviation = "ENTCHD"

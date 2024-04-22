@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Attribute" load_steps=2 format=3 uid="uid://di10uy66ss7uf"]
+
+[ext_resource type="Script" path="res://Classes/attribute.gd" id="1_00oyx"]
+
+[resource]
+script = ExtResource("1_00oyx")
+name = "Permanent"
+description = "Once placed, card is not shuffled back into the deck"
+id = 2
+abbreviation = "PERM"

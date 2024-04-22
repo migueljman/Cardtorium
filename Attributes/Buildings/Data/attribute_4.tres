@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Attribute" load_steps=2 format=3 uid="uid://bgbd42u0l5blp"]
+
+[ext_resource type="Script" path="res://Classes/attribute.gd" id="1_ket2a"]
+
+[resource]
+script = ExtResource("1_ket2a")
+name = "Temporary"
+description = "Can be torn down to refund 50% resource cost"
+id = 4
+abbreviation = "TEMP"
