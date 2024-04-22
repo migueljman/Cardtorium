@@ -37,6 +37,7 @@ func _ready():
 
 	var camera = $Camera2D
 	camera.selected_tile.connect(self.on_selected_tile)
+	camera.save_game.connect(on_save_game)
 	hand_renderer.card_selected.connect(self.on_card_selected)
 	game.turn_ended.connect(on_turn_ended)
 
@@ -138,6 +139,11 @@ func check_and_place_card():
 			# Deselect any selected tile
 			selected_tile = Vector2i()
 
+func on_save_game():
+	# var packed_scene = PackedScene.new()
+	# if packed_scene.pack(game) == OK:
+	ResourceSaver.save(game.board, "res://game0.tres")
+		
 ## Called when a player presses the end_turn button
 func on_turn_ended(prev_player: int, current_player: Player):
 	action_input_wait = false

@@ -11,6 +11,7 @@ var drag_threshold = 30 # must drag this many pixels to be considered a drag
 signal selected_tile(Vector2)
 var card_placement_allowed = false
 var zoom_speed = 0.1
+signal save_game
 
 func _input(event):
 	if event is InputEventMouseButton:
@@ -41,6 +42,9 @@ func _input(event):
 				zoom -= Vector2.ONE * zoom_speed
 			elif keycode == KEY_EQUAL:
 				zoom += Vector2.ONE * zoom_speed
+			elif keycode == KEY_C:
+				print("save game")
+				emit_signal("save_game")
 func _unhandled_key_input(event):
 	# Checks for up-down motion
 	if event.is_action_pressed("camera_up"):
