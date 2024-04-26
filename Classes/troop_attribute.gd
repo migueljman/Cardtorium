@@ -1,10 +1,11 @@
-extends Node 
+extends Resource
 
 ## Base class for troop
 class_name TroopAttribute
 
 
 ## Stores data on the attribute description
+@export
 var attribute: Attribute
 ## Troop object which the attribute is attached to
 var parent: Troop
