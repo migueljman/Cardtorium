@@ -6,7 +6,7 @@ func build_action() -> Action:
     var action: Action = Action.new()
     action.name = "Healer"
     action.description = attribute.description
-    action.setup(parent.game, buff_nearby)
+    action.setup(parent.game, heal_nearby)
     return action
 
 func heal_nearby():
