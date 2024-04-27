@@ -1,14 +1,6 @@
 extends TroopAttribute
 
 # Logic for splash attribute
-
-func build_action() -> Action:
-    var action: Action = Action.new()
-    action.name = attribute.name
-    action.description = attribute.description
-    action.setup(parent.game, on_attack)
-    return action
-
 #loops to all tiles around defender and applies half damage
 
 func on_attack(defender: Unit, attacker: Unit):
