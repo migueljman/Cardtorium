@@ -21,8 +21,8 @@ enum Terrain {GRASS = -1, FOREST, MOUNTAIN, WATER}
 ## 2D array which stores card locations.
 @export var units: Array = []
 
-## Stores the players of the game
-@export var players: Array[Player]
+## Stores the players of the game.
+@export var players: Array[Player] = []
 
 ## Which player is currently taking their turn
 @export var current_player: int = 0
@@ -36,6 +36,9 @@ enum Terrain {GRASS = -1, FOREST, MOUNTAIN, WATER}
 
 ## The size of the board (in tiles) encoded as a vector
 @export var SIZE: Vector2i
+
+## The number of players in the game.
+@export var num_players: int
 
 ## Allocates memory to set up an empty board with wid x height tiles.
 func setup(wid: int, height: int, _num_players: int):
@@ -82,3 +85,4 @@ func setup(wid: int, height: int, _num_players: int):
 	# TODO the name should be read from somewhere else, maybe the main menu
 	players[0].name = "Player_0"
 	players[1].name = "Player_1"
+	num_players = _num_players
