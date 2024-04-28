@@ -2,6 +2,7 @@ extends TroopAttribute
 
 # Contains the logic for the dash attribute
 
+@export
 var has_attacked: bool = false
 
 func on_attack(defender: Unit):

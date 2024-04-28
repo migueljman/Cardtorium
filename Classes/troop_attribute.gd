@@ -5,8 +5,7 @@ class_name TroopAttribute
 
 
 ## Stores data on the attribute description
-@export
-var attribute: Attribute
+@export var attribute: Attribute
 ## Troop object which the attribute is attached to
 var parent: Troop
 ## The game state
