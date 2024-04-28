@@ -6,10 +6,7 @@ class_name Game
 
 ## Contains the game's data. Saving the board to disk allows
 ## saving and loading games.
-var board: Board = Board.new()
-
-## Number of players
-var num_players: int
+var board: Board = null
 
 ## Notifies other nodes when a set of terrain tiles is changed.
 signal terrain_updated(changed: Array[Vector2i], terrain: Board.Terrain)
@@ -34,8 +31,8 @@ signal input_requested(options: Array[Vector2i])
 ## Emitted when the player makes a selection
 signal input_received(choice: Vector2i)
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
+## Creates a new game from scratch
+func create_new():
 	board = Board.new()
 	# Creates a new board of size 11 x 11
 	var width = 5
@@ -45,7 +42,6 @@ func _ready():
 	# 	board.players[i].setup()
 	board.players[0].setup(self, Vector2i(0,board.SIZE.y / 2), 0)
 	board.players[1].setup(self,Vector2i(board.SIZE.x - 1,board.SIZE.y / 2), 1)
-	num_players = 2
 
 ## Changes the terrain for an array of tiles
 func set_terrain(terrain: Board.Terrain, location: Array[Vector2i]):
@@ -79,7 +75,7 @@ func end_turn():
 	var prev = board.current_player
 	# Updates current_player
 	board.current_player += 1
-	if board.current_player == num_players:
+	if board.current_player == board.num_players:
 		board.current_player = 0
 		board.turns += 1
 	# Sets next player up to begin their turn

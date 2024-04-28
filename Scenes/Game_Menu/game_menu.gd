@@ -19,16 +19,7 @@ func handle_connecting_signals() -> void:
 	load_button.button_down.connect(on_load_pressed)
 
 func load_game() -> void:
-	if ResourceLoader.exists("res://game0.tres"):
-		var packed_scene = ResourceLoader.load("res://game0.tres") # as PackedScene
-		if packed_scene != null:
-			print("Loading scene")
-			get_tree().change_scene_to_packed(packed_scene)
-		else:
-			print("Failed to load scene")
-			
-# const DECK: Array[String] = [
-# 	"Deck 1",
-# 	"Deck 2",
-# 	"Deck 3"
-# ]
+	var root: Node = start_level.instantiate()
+	root._board = load("res://game0.tres")
+	get_tree().get_root().add_child(root)
+	queue_free()

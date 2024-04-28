@@ -3,7 +3,9 @@ extends Node2D
 var troop_scene = preload ("res://Scenes/Rendering/rendered_troop.tscn")
 var card: Card
 
+## The size of a tile in pixels
 const TILE_SIZE = 64
+## The game object
 @onready var game: Game = $Game
 var selected_index = -1
 var selected_tile: Vector2i = Vector2i()
@@ -11,13 +13,22 @@ signal card_placed(card_index: int)
 @onready var move_renderer = $MoveRender
 @onready var hand_renderer = $GUI_Renderer/HandRenderer
 @onready var action_bar = $GUI_Renderer/Control/ActionBar
-#@onready var ter_renderer = $TerrainRenderer
 var active_unit: Unit = null
 var action_input_wait: bool = false
 var action_input_options: Array[Vector2i] = []
+## Data required to save the game. If set to a value before this node is added
+## to the scene tree, allows loading games.
+var save_data: Board = null
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	# Creates a new game if one is not found
+	if save_data == null:
+		game.create_new()
+	else:
+		game.board = save_data
+		load_game()
 	# Renders the background
 	var board: Board = game.board
 	var background: Sprite2D = $Background
@@ -32,7 +43,7 @@ func _ready():
 	# Sets up hand rendering
 	for player in board.players:
 		hand_renderer.connect_to_player(player)
-	board.players[0].begin_turn()
+	board.players[board.current_player].begin_turn()
 	game.render_topbar.emit(board.turns, board.players[board.current_player])
 
 	var camera = $Camera2D
@@ -41,6 +52,37 @@ func _ready():
 	hand_renderer.card_selected.connect(self.on_card_selected)
 	game.turn_ended.connect(on_turn_ended)
 
+## Loads a game from a save file.
+func load_game():
+	var board: Board = game.board
+	# Renders all of the cities on the board
+	for row in board.buildings:
+		for building in row:
+			if building is City:
+				render_city(building)
+			# TODO: Add code to render buildings
+	# Renders any troops on the board
+	for row in board.units:
+		for troop in row:
+			if troop == null:
+				continue
+			troop = troop as Troop
+			troop.game = game
+			troop.setup()
+			render_troop(troop, troop.pos)
+	# Renders territory
+	var territory_renderer = $TerritoryRenderer
+	var player_territories = []
+	for i in range(0, board.num_players):
+		player_territories.append([])
+	for x in range(0, board.SIZE.x):
+		for y in range(0, board.SIZE.y):
+			if board.territory[x][y] != -1:
+				player_territories[board.territory[x][y]].append(Vector2i(x, y))
+	for i in range(0, board.num_players):
+		territory_renderer._on_game_territory_claimed(player_territories[i], i)
+
+## Called when a card in the player's hand is pressed
 func on_card_selected(card_index: int):
 	selected_index = card_index
 		
