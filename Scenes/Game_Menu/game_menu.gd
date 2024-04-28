@@ -20,6 +20,6 @@ func handle_connecting_signals() -> void:
 
 func load_game() -> void:
 	var root: Node = start_level.instantiate()
-	root._board = load("res://game0.tres")
+	root.save_data = load("res://game0.tres")
 	get_tree().get_root().add_child(root)
 	queue_free()
