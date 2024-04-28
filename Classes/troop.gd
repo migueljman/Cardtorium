@@ -41,6 +41,8 @@ func from_card(_game: Game, card: Card):
 	rng = base_stats.attack_range
 	health = base_stats.health
 	game.turn_ended.connect(reset)
+	owned_by = game.board.current_player
+	card_type = Card.CardType.TROOP
 	# Loads attributes
 	for attribute_id in self.base_stats.attributes:
 		var attribute_file = load('res://Attributes/Troops/Logic/attribute_{0}.gd'.format({0: attribute_id}))
@@ -83,9 +85,16 @@ func clear_fog():
 ## radius of the center.
 func _get_surrounding(center: Vector2i, radius: int) -> Array[Vector2i]:
 	var output: Array[Vector2i] = []
-	for x_off in range( - radius, radius + 1):
-		for y_off in range( - radius, radius + 1):
-
+	for x_off in range(-radius, radius + 1):
+		if center.x + x_off < 0:
+			continue
+		elif center.x + x_off >= game.board.SIZE.x:
+			break
+		for y_off in range(-radius, radius + 1):
+			if center.y + y_off < 0:
+				continue
+			elif center.y + y_off >= game.board.SIZE.y:
+				break
 			if x_off == 0 and y_off == 0:
 				continue
 			output.append(center + Vector2i(x_off, y_off))
