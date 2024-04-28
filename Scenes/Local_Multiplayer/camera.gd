@@ -42,10 +42,14 @@ func _input(event):
 				zoom -= Vector2.ONE * zoom_speed
 			elif keycode == KEY_EQUAL:
 				zoom += Vector2.ONE * zoom_speed
-			elif keycode == KEY_C:
-				print("save game")
-				emit_signal("save_game")
+
 func _unhandled_key_input(event):
+	# Checks for save game
+	if event.is_action("save"):
+		if event.is_action_released("save"):
+			print("Game saved!")
+			save_game.emit()
+		return
 	# Checks for up-down motion
 	if event.is_action_pressed("camera_up"):
 		vel.y = -speed
