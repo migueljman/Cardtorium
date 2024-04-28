@@ -45,10 +45,9 @@ func _input(event):
 
 func _unhandled_key_input(event):
 	# Checks for save game
-	if event.is_action("save"):
-		if event.is_action_released("save"):
-			print("Game saved!")
-			save_game.emit()
+	if event.is_action_released("save"):
+		print("Game saved!")
+		save_game.emit()
 		return
 	# Checks for up-down motion
 	if event.is_action_pressed("camera_up"):
