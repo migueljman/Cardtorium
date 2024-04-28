@@ -39,7 +39,9 @@ signal fog_placed(tiles: Array[Vector2i])
 @export var territory: int
 
 ## Creates a new player resource from scratch
-func _init(board_size: Vector2i, _deck: Array[Card]):
+func _init(board_size: Vector2i = Vector2i(0, 0), _deck: Array[Card] = []):
+	if board_size == Vector2i(0, 0) or len(_deck) == 0:
+		return
 	randomize()
 	discovered = []
 	for x in range(board_size.x):
