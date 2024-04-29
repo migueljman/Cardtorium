@@ -20,9 +20,9 @@ var valid_tiles: Array[Vector2i] = []
 ## States of the high-level state machine which represents the game
 enum States {
 	## Default state when nothing is selected
-	DEFAULT, 
+	DEFAULT,
 	## When a card in the hand is selected
-	CARD_SELECTED, 
+	CARD_SELECTED,
 	## State when a unit on the board is selected
 	UNIT_SELECTED,
 	## State when a unit is awaiting input to perform an action
@@ -38,7 +38,7 @@ func _ready():
 	# Renders the background
 	var board: Board = game.board
 	var background: Sprite2D = $Background
-	background.region_rect.size = TILE_SIZE * Vector2(board.SIZE.x+2, board.SIZE.y+2)
+	background.region_rect.size = TILE_SIZE * Vector2(board.SIZE.x + 2, board.SIZE.y + 2)
 	# Renders the tiles
 	var terrain: TileMap = $TerrainRenderer
 	terrain.board = board
@@ -112,6 +112,8 @@ func on_selected_tile(pos: Vector2i):
 func select_unit(unit: Unit):
 	if unit == null:
 		return
+	if unit.owned_by != game.board.current_player:
+		return
 	if unit is Troop:
 		# If the unit cannot do anything, return
 		if not (unit.can_act or unit.can_attack or unit.can_move):
@@ -171,6 +173,6 @@ func troop_action(index: int):
 		state = States.UNIT_ACTION_INPUT
 
 ## Called when an action requests user input
-func _on_game_input_requested(options:Array[Vector2i]):
+func _on_game_input_requested(options: Array[Vector2i]):
 	valid_tiles = options
 	move_renderer.draw_black_outlines(options)
