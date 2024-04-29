@@ -53,6 +53,7 @@ func _init(board_size: Vector2i = Vector2i(0, 0), _deck: Array[Card] = []):
 
 ## Sets up player data
 func setup(game: Game, base_position: Vector2i, index: int):
+	self.base_position = base_position
 	var board_size = game.board.SIZE
 	# Clears the fog in a 2-tile radius around the home base
 	for x in range(base_position.x - 2, base_position.x + 3):

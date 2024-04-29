@@ -31,6 +31,8 @@ signal input_requested(options: Array[Vector2i])
 ## Emitted when the player makes a selection
 signal input_received(choice: Vector2i)
 
+@onready var win_scene = preload ("res://Scenes/Local_Multiplayer/wins.tscn") as PackedScene
+
 ## Creates a new game from scratch
 func create_new():
 	board = Board.new()
@@ -142,3 +144,6 @@ func place_city(pos: Vector2i):
 	city.position = 64 * pos
 	board.buildings[pos.x][pos.y] = city
 	city_placed.emit(city)
+
+func win_screen():
+	get_tree().change_scene_to_packed(win_scene)

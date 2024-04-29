@@ -297,6 +297,16 @@ func move(destination: Vector2i):
 	game.board.units[from.x][from.y] = null
 	game.board.units[destination.x][destination.y] = self
 	pos = destination
+
+	var opponent
+	if game.board.current_player == 0:
+		opponent = game.board.players[1]
+	else:
+		opponent = game.board.players[0]
+	if pos == opponent.base_position:
+		game.win_screen()
+		return
+		
 	# Prevents unit from doing other actions
 	can_act = false
 	can_attack = false
