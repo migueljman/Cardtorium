@@ -158,6 +158,11 @@ func build_graph():
 				frontier.append(to)
 			var new_path = path + [to]
 			frontier_data[to] = [new_strength, new_dist, new_path]
+	# Remove any tiles which contain other troops
+	var invalid: Array[Vector2i] = []
+	for tile in graph.keys():
+		if game.board.units[tile.x][tile.y] != null:
+			graph.erase(tile)
 	self.move_graph = graph
 
 ## Internal function which determines the cost of moving from a tile to a tile.[br][br]
@@ -179,26 +184,33 @@ func _calc_move_cost(strength: float, from: Vector2i, to: Vector2i) -> float:
 	# Checks if destination is even on the board
 	if to.x < 0 or to.y < 0 or to.x >= board.SIZE.x or to.y >= board.SIZE.y:
 		return - 1
+
 	var dest_type: Board.Terrain = board.tiles[to.x][to.y]
+	# Fills out a default move cost array
+	var move_costs: Dictionary = {
+		"grass": strength - 1, "forest": 0, "mountain": 0,
+		"water": -1, "unit": -1, "zone_of_control": 0
+	}
+	# Checks if any attributes override the behavior of calc_move_cost
+	for attr in attributes:
+		var new_dict: Dictionary = attr.calc_move_cost(strength, from, to, board)
+		for key in new_dict:
+			move_costs[key] = new_dict[key]
+	# Stores the strength
+	var new_strength: float = strength
 	# Check if the destination tile contains another troop, skip if it does
 	var unit_at_destination = board.units[to.x][to.y]
 	if unit_at_destination != null and unit_at_destination is Troop:
-		return - 1
-	# Checks if any attributes override the behavior of calc_move_cost
-	for attr in attributes:
-		var value = attr.calc_move_cost(strength, from, to, board)
-		if value != null:
-			return value
-	# Checks if the move is even discovered
-	if not board.players[self.owned_by].discovered[to.x][to.y]:
-		return - 1
+		new_strength = min(new_strength, move_costs["unit"])
 	# Checks terrain type
 	if dest_type == Board.Terrain.FOREST:
-		return 0
+		new_strength = min(new_strength, move_costs["forest"])
 	elif dest_type == Board.Terrain.MOUNTAIN:
-		return 0
+		new_strength = min(new_strength, move_costs["mountain"])
 	elif dest_type == Board.Terrain.WATER:
-		return - 1
+		new_strength = min(new_strength, move_costs["water"])
+	elif dest_type == Board.Terrain.GRASS:
+		new_strength = min(new_strength, move_costs["grass"])
 	# Checks for zone-of-control
 	var temp: Vector2i = Vector2i.ZERO
 	for x_off in range( - 1, 2):
@@ -211,9 +223,10 @@ func _calc_move_cost(strength: float, from: Vector2i, to: Vector2i) -> float:
 				continue
 			var unit: Unit = board.units[temp.x][temp.y]
 			if unit != null and owned_by != unit.owned_by:
-				return 0
+				new_strength = min(new_strength, move_costs["zone_of_control"])
+				return new_strength
 	# TODO: Check if there is an enemy nearby to apply zone-of-control
-	return max(strength - 1, 0)
+	return new_strength
 
 ## Builds an array of tiles that the unit can attack
 func build_attack_list():

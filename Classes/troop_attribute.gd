@@ -32,8 +32,8 @@ func on_attacked(attacker: Troop):
 ## Overrides to this function can return a non-null value to change the move calculation.
 ## Otherwise, returning null uses the default troop calculation.
 ## For information on the parameters, see [method Troop._calc_move_cost]
-func calc_move_cost(strength: float, from: Vector2i, to: Vector2i, board: Board):
-    return null
+func calc_move_cost(strength: float, from: Vector2i, to: Vector2i, board: Board) -> Dictionary:
+    return {}
 
 ## Virtual function which overrides fog clearing.
 ## Overrides to this function can return a non-null value to change the fog clearing.
