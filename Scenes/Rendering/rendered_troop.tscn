@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://5cv06oswmc6f"]
+[gd_scene load_steps=4 format=3 uid="uid://5cv06oswmc6f"]
 
 [ext_resource type="Script" path="res://Scenes/Rendering/rendered_troop.gd" id="1_fdp87"]
 [ext_resource type="Texture2D" uid="uid://bntktjky1odcq" path="res://Assets/Troop Sprites/default.png" id="2_f0vdm"]
+[ext_resource type="FontFile" uid="uid://0bpg4aa36c5f" path="res://Assets/Minecraft.ttf" id="3_6s685"]
 
 [node name="Rendered Troop" type="Node2D"]
 script = ExtResource("1_fdp87")
@@ -9,3 +10,19 @@ script = ExtResource("1_fdp87")
 [node name="Sprite" type="Sprite2D" parent="."]
 texture = ExtResource("2_f0vdm")
 centered = false
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_left = 4.0
+offset_right = 59.0
+offset_bottom = 22.0
+color = Color(0, 0, 0, 0.4)
+
+[node name="HP" type="Label" parent="."]
+offset_left = 4.0
+offset_right = 59.0
+offset_bottom = 23.0
+theme_override_fonts/font = ExtResource("3_6s685")
+theme_override_font_sizes/font_size = 16
+text = "??/??"
+horizontal_alignment = 1
+vertical_alignment = 1

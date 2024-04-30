@@ -24,6 +24,9 @@ var actions: Array[Action]
 ## A list of all troops / buildings that this troop can attack
 var attack_list: Dictionary
 
+## Emitted when the troop takes damage
+signal damaged
+
 
 ## Creates a new troop
 func _init(_game: Game = null, card: Card = null):
@@ -261,6 +264,8 @@ func being_attacked(attacker: Unit, atk: int, attack_force: float) -> int:
 		health = 0
 		game.remove_unit(self)
 		return 0
+	# Otherwise emits damaged
+	damaged.emit()
 	# Runs through attributes
 	for attr in attributes:
 		attr.on_attacked(attacker)
@@ -282,6 +287,7 @@ func attack_unit(defender: Unit):
 	if health <= 0:
 		health = 0
 		game.remove_unit(self)
+	damaged.emit()
 	# Runs through attributes if it survives
 	for attr in attributes:
 		attr.on_attack(defender)

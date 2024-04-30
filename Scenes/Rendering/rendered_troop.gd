@@ -1,10 +1,12 @@
 extends Node2D
 
 var troop: Troop
+var TEXT: Label
 
 # Called when the node enters the scene tree for the first time.
 func prepare_for_render(troop_to_render: Troop, game: Game):
 	var sprite = $Sprite
+	TEXT = $HP
 	self.troop = troop_to_render
 	var texture: Texture2D = load("res://Assets/Troop Sprites/idle_{0}.png".format({0: troop.id}))
 	if texture != null:
@@ -16,6 +18,8 @@ func prepare_for_render(troop_to_render: Troop, game: Game):
 	game.unit_removed.connect(self.on_troop_died)
 	game.troop_toggle_act.connect(self.on_troop_toggle_act)
 	game.turn_ended.connect(self.on_turn_ended)
+	troop.damaged.connect(on_damaged)
+	TEXT.text = "%d/%d" % [troop.health, troop.base_stats.health]
 
 ## Reset the sprite to normal modulate
 func on_turn_ended(_prev, _players):
@@ -37,3 +41,7 @@ func on_troop_moved(_troop: Troop, path: Array):
 func on_troop_died(unit: Unit):
 	if unit is Troop and unit == troop:
 		self.queue_free()
+
+## Called when a troop takes damage
+func on_damaged():
+	TEXT.text = "%d/%d" % [troop.health, troop.base_stats.health]
