@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b8if0t41frfc"
-path="res://.godot/imported/imperial_castle.png-626a471352e819aa138aab4a26ea9698.ctex"
+uid="uid://ddg65olcqxana"
+path="res://.godot/imported/flagbearercardart.png-ff8c8ce1a3c242a47a6ab0691356c790.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Building Sprites/imperial_castle.png"
-dest_files=["res://.godot/imported/imperial_castle.png-626a471352e819aa138aab4a26ea9698.ctex"]
+source_file="res://Assets/Characters/CardSprites/flagbearercardart.png"
+dest_files=["res://.godot/imported/flagbearercardart.png-ff8c8ce1a3c242a47a6ab0691356c790.ctex"]
 
 [params]
 

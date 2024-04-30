@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b8if0t41frfc"
-path="res://.godot/imported/imperial_castle.png-626a471352e819aa138aab4a26ea9698.ctex"
+uid="uid://brxyyjhru33wy"
+path="res://.godot/imported/idle_15.png-ebfbba4bd388363775bea43aed9cf126.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Building Sprites/imperial_castle.png"
-dest_files=["res://.godot/imported/imperial_castle.png-626a471352e819aa138aab4a26ea9698.ctex"]
+source_file="res://Assets/Troop Sprites/idle_15.png"
+dest_files=["res://.godot/imported/idle_15.png-ebfbba4bd388363775bea43aed9cf126.ctex"]
 
 [params]
 

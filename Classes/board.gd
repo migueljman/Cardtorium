@@ -67,13 +67,14 @@ func setup(wid: int, height: int, _num_players: int):
 	var card1: Card = load('res://Cards/Troops/troop_1.tres')
 	var card2: Card = load('res://Cards/Troops/troop_8.tres')
 	var card3: Card = load('res://Cards/Troops/troop_12.tres')
+	var card4: Card = load('res://Cards/Buildings/building_3.tres')
 	var deck: Array[Card] = [
-		card1, card2, card3,
-		card1, card2, card3,
-		card1, card2, card3,
-		card1, card2, card3,
-		card1, card2, card3,
-		card1, card2, card3,
+		card1, card2, card3, card4,
+		card1, card2, card3, card4,
+		card1, card2, card3, card4,
+		card1, card2, card3, card4,
+		card1, card2, card3, card4,
+		card1, card2, card3, card4
 	]
 	players.append(Player.new(SIZE, deck))
 	players.append(Player.new(SIZE, deck))
