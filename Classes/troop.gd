@@ -358,12 +358,19 @@ func build_action_list():
 		return
 	# Checks if the troop is able to claim territory
 	# If so, builds the claim action
+	var can_claim = true
 	if game.board.territory[pos.x][pos.y] == owned_by:
-		var claim = Action.new()
-		claim.setup(game, claim_territory)
-		claim.name = "Claim"
-		claim.description = "Claims territory in a 1-tile radius"
-		actions.append(claim)
+		for tile in _get_surrounding(pos, 1):
+			var troop: Troop = game.board.units[tile.x][tile.y]
+			if troop != null and troop.owned_by != owned_by:
+				can_claim = false
+				break
+		if can_claim:
+			var claim = Action.new()
+			claim.setup(game, claim_territory)
+			claim.name = "Claim"
+			claim.description = "Claims territory in a 1-tile radius"
+			actions.append(claim)
 	# Adds attribute actions
 	for attr in attributes:
 		var action = attr.build_action()
