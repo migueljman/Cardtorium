@@ -97,9 +97,6 @@ func end_turn():
 	# Lets other nodes know that a player has ended their turn
 	turn_ended.emit(prev, board.players[board.current_player])
 	
-	print("end turn clicked")
-	print(board.current_player)
-	print(board.turns)
 
 ## Claims territory in a radius for a player.
 ## Passing a -1 for the player parameter will unclaim territory.
