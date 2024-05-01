@@ -101,6 +101,11 @@ func load_game():
 
 ## Called when the user clicks on a card in their hand.
 func on_card_selected(card_index: int):
+	# If waiting on input, prevents things from happening
+	if state == States.UNIT_ACTION_INPUT:
+		return
+	# Deselects any active units
+	deselect_unit()
 	selected_index = card_index
 	active_unit = game.build_unit(game.board.players[game.board.current_player].hand[card_index])
 	valid_tiles = active_unit.get_placeable_tiles()
@@ -192,7 +197,11 @@ func on_save_game():
 		
 ## Called when a player presses the end_turn button
 func on_turn_ended(prev_player: int, current_player: Player):
+	# Stops waiting for action input
 	action_input_wait = false
+	# Sets state to default
+	state = States.DEFAULT
+	# Deselects any active units
 	deselect_unit()
 	
 ## Renders a troop card by adding it to the scene tree
