@@ -111,6 +111,12 @@ func on_card_selected(card_index: int):
 	valid_tiles = active_unit.get_placeable_tiles()
 	move_renderer.draw_black_outlines(valid_tiles)
 	state = States.CARD_SELECTED
+
+## Called when a user deselects a card in their hand
+func on_card_deselected():
+	# Exits card_selected state
+	move_renderer.clear()
+	state = States.DEFAULT
 		
 ## Called when a tile is clicked
 ## Behavior depends on the state
