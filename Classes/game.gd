@@ -13,7 +13,7 @@ signal terrain_updated(changed: Array[Vector2i], terrain: Board.Terrain)
 ## Emitted when a troop is placed.
 signal troop_placed(troop: Troop, pos: Vector2i)
 ## Emitted when a player ends their turn.
-signal turn_ended(local_id: int, current_player: Player)
+signal turn_ended(previous: int, current_player: Player)
 ## Emitted when a troop is moved
 signal troop_moved(troop: Troop, path: Array)
 ## Emitted when a unit is removed from the board.
