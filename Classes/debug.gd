@@ -1,8 +1,5 @@
 extends Node
 
-## Used to store data on a game
-class_name DebugLog
-
 ## How many spaces to use per indent
 var INDENT: String = '    '
 ## Whether or not logging is enabled at all
@@ -41,8 +38,6 @@ func set_output(filepath: String = '', object: String = ''):
         output_dict[object] = file
     else:
         default_file = file
-
-
 
 ## Logs a message.
 func log(object: String, message: String):
