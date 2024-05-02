@@ -186,8 +186,10 @@ func _calc_move_cost(strength: float, from: Vector2i, to: Vector2i) -> float:
 	var board = game.board
 	# Checks if destination is even on the board
 	if to.x < 0 or to.y < 0 or to.x >= board.SIZE.x or to.y >= board.SIZE.y:
-		return - 1
-
+		return -1
+	# Checks if destination is even discovered
+	if not board.players[board.current_player].discovered[to.x][to.y]:
+		return -1
 	var dest_type: Board.Terrain = board.tiles[to.x][to.y]
 	# Fills out a default move cost array
 	var move_costs: Dictionary = {
