@@ -21,6 +21,27 @@ var default_file = null
 ## Determines the indent level of a log.
 ## Allows functions and such to format the log file better.
 var indent_level = 0
+## Stores what files have been opened
+var open_files: Dictionary = {}
+
+
+## Sets the output file for some object. If filepath is the empty string,
+## sends output to the console. If object is the empty string, sets the
+## default output.
+func set_output(filepath: String = '', object: String = ''):
+    var file = null
+    # Opens the file if the filepath exists
+    if filepath in open_files:
+        file = open_files[filepath]
+    elif filepath != '':
+        file = FileAccess.open(filepath, FileAccess.WRITE)
+        open_files[filepath] = file
+    # Adds the file as output for some object
+    if object != '':
+        output_dict[object] = file
+    else:
+        default_file = file
+
 
 
 ## Logs a message.
