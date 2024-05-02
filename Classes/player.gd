@@ -37,6 +37,8 @@ signal fog_placed(tiles: Array[Vector2i])
 @export var hand: Array[Card]
 ## How much territory the player has
 @export var territory: int
+## Max number of cities that the player can place
+@export var max_cities: int = 1
 
 ## Creates a new player resource from scratch
 func _init(board_size: Vector2i = Vector2i(0, 0), _deck: Array[Card] = []):
@@ -132,6 +134,14 @@ func remove_from_hand(index: int):
 	cards_removed.emit(old_hand, hand)
 	shuffle_card(card)
 
-## Calculates resources per turn
-func calculate_rpt():
+## Places a city for the player
+func place_city(game: Game, pos: Vector2i):
+	game.place_city(pos)
+	cities += 1
+	game.render_topbar.emit(game.board.turns, self)
+
+## Runs calculations which depend on territory
+func run_territory_calculations():
 	rpt = 2 + (territory / 20)
+	max_cities = 1 + (territory / 15)
+	hand_size = max(5, 1 + (territory / 15))

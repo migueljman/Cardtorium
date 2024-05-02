@@ -238,3 +238,28 @@ func troop_action(index: int):
 func _on_game_input_requested(options: Array[Vector2i]):
 	valid_tiles = options
 	move_renderer.draw_black_outlines(options)
+
+
+## Called when the user attemps to place a city
+func _on_camera_2d_attempt_place_city(pos:Vector2i):
+	if state != States.DEFAULT:
+		return
+	var board: Board = game.board
+	var player: Player = board.players[board.current_player]
+	if player.cities >= player.max_cities:
+		return
+	for x in range(pos.x - 1, pos.x + 2):
+		if x < 0:
+			continue
+		elif x >= board.SIZE.x:
+			break
+		for y in range(pos.y - 1, pos.y + 2):
+			if y < 0:
+				continue
+			elif y >= board.SIZE.y:
+				break
+			if board.territory[x][y] != board.current_player:
+				return
+			elif board.buildings[x][y] != null and board.buildings[x][y] is City:
+				return
+	player.place_city(game, pos)

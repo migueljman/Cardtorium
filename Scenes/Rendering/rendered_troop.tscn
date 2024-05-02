@@ -5,6 +5,7 @@
 [ext_resource type="FontFile" uid="uid://cxq7moiqq1hn3" path="res://Assets/Fonts/PixelOperator8.ttf" id="3_3gx4a"]
 
 [node name="Rendered Troop" type="Node2D"]
+z_index = 2
 script = ExtResource("1_fdp87")
 
 [node name="Sprite" type="Sprite2D" parent="."]

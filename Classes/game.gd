@@ -37,8 +37,8 @@ signal input_received(choice: Vector2i)
 func create_new():
 	board = Board.new()
 	# Creates a new board of size 11 x 11
-	var width = 5
-	var height = 5
+	var width = 7
+	var height = 7
 	board.setup(width, height, 2)
 	# for i in range(len(board.players)):
 	# 	board.players[i].setup()
@@ -120,11 +120,11 @@ func claim_territory(pos: Vector2i, radius: int, player: int = -2):
 			board.territory[x][y] = player
 			if old != -1:
 				board.players[old].territory -= 1
-				board.players[old].calculate_rpt()
+				board.players[old].run_territory_calculations()
 			board.players[player].territory += 1
 			claimed.append(Vector2i(x, y))
 	# Emits signals
-	board.players[player].calculate_rpt()
+	board.players[player].run_territory_calculations()
 	territory_claimed.emit(claimed, player)
 	render_topbar.emit(board.turns, board.players[player])
 
