@@ -31,10 +31,13 @@ signal input_requested(options: Array[Vector2i])
 ## Emitted when the player makes a selection
 signal input_received(choice: Vector2i)
 
+@onready var logger = get_node('/root/DebugLog')
+
 @onready var win_scene = preload ("res://Scenes/Local_Multiplayer/wins.tscn") as PackedScene
 
 ## Creates a new game from scratch
 func create_new():
+	logger.log('game', 'Creating a new game')
 	board = Board.new()
 	# Creates a new board of size 11 x 11
 	var width = 5
@@ -56,14 +59,17 @@ func build_unit(card: Card) -> Unit:
 	match (card.type):
 		# Places a troop card
 		Card.CardType.TROOP:
+			logger.log('game', 'Building a troop (%s)' % [card.name])
 			var troop: Troop = Troop.new(self, card)
 			return troop
+	logger.log('game', 'build_unit failed to construct a unit')
 	return null
 
 ## Places a unit at position x, y
 func place_unit(unit: Unit, x: int, y: int):
 	match (unit.card_type):
 		Card.CardType.TROOP:
+			logger.log('game', 'Placing troop %s at (%d, %d)' % [unit.base_stats.name, x, y])
 			board.units[x][y] = unit
 			unit.pos = Vector2i(x, y)
 			unit.owned_by = board.current_player
@@ -75,6 +81,7 @@ func place_from_hand(index: int, x: int, y: int, unit: Unit = null):
 	var card: Card = player.hand[index]
 	if player.resources < card.cost:
 		return
+	logger.log('game', 'Placing card %d from the hand of %s' % [index, player.name])
 	player.remove_from_hand(index)
 	render_topbar.emit(board.turns, board.players[board.current_player])
 	if unit == null:
@@ -83,6 +90,7 @@ func place_from_hand(index: int, x: int, y: int, unit: Unit = null):
 
 ## Goes to the next player's turn
 func end_turn():
+	logger.log('game', 'Ending player %d\'s turn' % [board.current_player])
 	var prev = board.current_player
 	# Updates current_player
 	board.current_player += 1
@@ -97,10 +105,6 @@ func end_turn():
 	# Lets other nodes know that a player has ended their turn
 	turn_ended.emit(prev, board.players[board.current_player])
 	
-	print("end turn clicked")
-	print(board.current_player)
-	print(board.turns)
-
 ## Claims territory in a radius for a player.
 ## Passing a -1 for the player parameter will unclaim territory.
 ## If a player is not passed, defaults to current player
@@ -120,6 +124,8 @@ func claim_territory(pos: Vector2i, radius: int, player: int = -2):
 			elif y >= board.SIZE.y:
 				break
 			var old = board.territory[x][y]
+			if old == player:
+				continue
 			board.territory[x][y] = player
 			if old != -1:
 				board.players[old].territory -= 1
@@ -128,11 +134,13 @@ func claim_territory(pos: Vector2i, radius: int, player: int = -2):
 			claimed.append(Vector2i(x, y))
 	# Emits signals
 	board.players[player].calculate_rpt()
+	logger.log('game', 'Claimed %d tiles for player %d' % [len(claimed), player])
 	territory_claimed.emit(claimed, player)
 	render_topbar.emit(board.turns, board.players[player])
 
 ## Removes a unit from the board
 func remove_unit(unit: Unit):
+	logger.log('game', 'Removed unit %s from (%d, %d)' % [unit.base_stats.name, unit.pos.x, unit.pos.y])
 	board.units[unit.pos.x][unit.pos.y] = null
 	unit_removed.emit(unit)
 
@@ -140,6 +148,7 @@ func remove_unit(unit: Unit):
 func place_city(pos: Vector2i):
 	if board.buildings[pos.x][pos.y] != null:
 		return
+	logger.log('game', 'Placing a city at (%d, %d)' % [pos.x, pos.y])
 	var city: City = City.new()
 	city.position = 64 * pos
 	board.buildings[pos.x][pos.y] = city

@@ -25,14 +25,14 @@ var open_files: Dictionary = {}
 ## Sets the output file for some object. If filepath is the empty string,
 ## sends output to the console. If object is the empty string, sets the
 ## default output.
-func set_output(filepath: String = '', object: String = ''):
+func set_output(object: String = '', filepath: String = ''):
     var file = null
     # Opens the file if the filepath exists
     if filepath in open_files:
         file = open_files[filepath]
     elif filepath != '':
-        file = FileAccess.open(filepath, FileAccess.WRITE)
-        open_files[filepath] = file
+        open_files[filepath] = FileAccess.open(filepath, FileAccess.WRITE)
+        file = open_files[filepath]
     # Adds the file as output for some object
     if object != '':
         output_dict[object] = file
@@ -57,4 +57,4 @@ func log(object: String, message: String):
         print('(%s) %s' % [object, message])
     else:
         var indent: String = INDENT.repeat(indent_level)
-        output.store_string('%s(%s) %s' % [indent, object, message])
+        output.store_string('(%s) %s\n' % [object, message])
