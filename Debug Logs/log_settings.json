@@ -11,7 +11,7 @@
 	},
 	"default_output": "Debug Logs/log.txt",
 	"levels": {
-		"Debug Logs/log.txt": "LOG",
+		"Debug Logs/log.txt": "DEBUG",
 		"Debug Logs/game.txt": "DEBUG",
 		"stdout": "WARNING"
 	}

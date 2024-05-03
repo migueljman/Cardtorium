@@ -50,6 +50,7 @@ enum DebugLevel {
 func from_json(filepath: String) -> bool:
     var json_file = FileAccess.open(filepath, FileAccess.READ)
     var json_string: String = json_file.get_as_text(true)
+    json_file.close()
     var settings = JSON.parse_string(json_string)
     if settings == null:
         print("Invalid settings file")
