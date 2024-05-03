@@ -222,7 +222,12 @@ func _send_message(object: String, message: String, level: DebugLevel):
         if level < file_log_levels.get(filepath, log_level):
             continue
         if output == null:
-            print('(%s) %s' % [object, message])
+            if level == DebugLevel.WARNING:
+                print_rich('[color=yellow]WARNING (%s):[/color] %s' % [object, message])
+            elif level == DebugLevel.ERROR:
+                print_rich('[color=red]ERROR (%s):[/color] %s' % [object, message])
+            else:
+                print('(%s) %s' % [object, message])
         else:
             var indent_level = indent_levels[filepath]
             var indent_string: String = INDENT.repeat(indent_level)
