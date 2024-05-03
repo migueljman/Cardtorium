@@ -45,8 +45,101 @@ enum DebugLevel {
     ERROR
 }
 
+## Loads logging settings from a json configuration file.
+## Returns whether or not the parsing was successful.
+func from_json(filepath: String) -> bool:
+    var json_file = FileAccess.open(filepath, FileAccess.READ)
+    var json_string: String = json_file.get_as_text(true)
+    var settings = JSON.parse_string(json_string)
+    if settings == null:
+        print("Invalid settings file")
+        return false
+    # Parses the settings dictionary
+    for key in settings:
+        var value = settings[key]
+        # Checks for enabled key
+        if key == 'enabled':
+            if not value is bool:
+                print('"enabled" must correspond to a boolean')
+                return false
+            enabled = value
+        # Checks for default_output
+        elif key == "default_output":
+            add_output('', value)
+        # Checks for whitelist
+        elif key == "whitelist":
+            if not value is Array:
+                print('"whitelist" must be a string array')
+                return false
+            for item in value:
+                if not item is String:
+                    print('"whitelist" must be a string array')
+                    return false
+                whitelist.append(item)
+        # Checks for blacklist
+        elif key == "blacklist":
+            if not value is Array:
+                print('"blacklist" must be a string array')
+                return false
+            for item in value:
+                if not item is String:
+                    print('"blacklist" must be a string array')
+                    return false
+                blacklist.append(item)
+        # Checks for output map
+        elif key == "output":
+            if not value is Dictionary:
+                print('"output" must be a dictionary')
+                return false
+            for tag in value:
+                var paths = value[tag]
+                if not paths is Array:
+                    print('"output[%s]" must be a list of filepaths' % tag)
+                    return false
+                output_dict[tag] = []
+                for path in paths:
+                    if not path is String:
+                        print('"output[%s]" must be a list of filepaths' % tag)
+                        return false
+                    if path == 'stdout':
+                        path = ''
+                    add_output(tag, path)
+        # Checks for debug levels
+        elif key == "levels":
+            var level_map = {
+                "LOG": DebugLevel.LOG,
+                "DEBUG": DebugLevel.DEBUG,
+                "ERROR": DebugLevel.ERROR,
+                "WARNING": DebugLevel.WARNING
+            }
+            if not value is Dictionary:
+                print('"levels" must be a dictionary')
+                return false
+            for path in value:
+                var level = value[path]
+                if not level is String:
+                    print('"levels[%s]" must be a debug level' % path)
+                    return false
+                var d_level = level_map.get(level)
+                if d_level == null:
+                    print('%s is not a valid debug level' % level)
+                    return false
+                if path == 'stdout':
+                    path = ''
+                file_log_levels[path] = d_level
+        # Checks for invalid key
+        else:
+            print('"%s" is not a valid key' % key)
+            return false
+    return true
+    
+
 ## Increments the indent level for each file corresponding to some object.
 func indent(object: String):
+    if object in blacklist:
+        return
+    elif whitelist and object in whitelist:
+        return
     if object in output_dict:
         for filepath in output_dict[object]:
             indent_levels[filepath] += 1
@@ -55,6 +148,10 @@ func indent(object: String):
 
 ## Decrements the indent level for each file corresponding to some object.
 func dedent(object: String):
+    if object in blacklist:
+        return
+    elif whitelist and object in whitelist:
+        return
     if object in output_dict:
         for filepath in output_dict[object]:
             indent_levels[filepath] = max(0, indent_levels[filepath] - 1)
@@ -65,14 +162,8 @@ func dedent(object: String):
 ## sets the default filepath instead. An empty string for filepath is
 ## interpreted as stdout.
 func add_output(object: String = '', filepath: String = ''):
-    var file = null
-    # Opens the file if the filepath exists
-    if filepath in open_files:
-        file = open_files[filepath]
-    elif filepath != '':
-        open_files[filepath] = FileAccess.open(filepath, FileAccess.WRITE)
-        indent_levels[filepath] = 0
-        file = open_files[filepath]
+    # Opens the file
+    var file = _open_file(filepath)
     # Adds the file as output for some object
     if object != '':
         if object not in output_dict:
@@ -83,6 +174,18 @@ func add_output(object: String = '', filepath: String = ''):
     else:
         default_filepath = filepath
         default_output = file
+
+## Returns an open file from a filepath. If the path has not been seen yet,
+## adds it to the open_files dictionary.
+func _open_file(filepath: String):
+    if filepath in open_files:
+        return open_files[filepath]
+    elif filepath != '':
+        open_files[filepath] = FileAccess.open(filepath, FileAccess.WRITE)
+        indent_levels[filepath] = 0
+        return open_files[filepath]
+    else:
+        return null
 
 ## Sets the log level for some file. If the file is the empty string,
 ## sets the default log level.

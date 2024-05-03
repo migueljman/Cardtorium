@@ -43,11 +43,7 @@ var state: States = States.DEFAULT
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# Sets up the logger
-	logger.enabled = true
-	logger.add_output('', 'Debug Logs/log.txt')
-	logger.add_output('game', '')
-	logger.add_output('game', 'Debug Logs/log.txt')
-	logger.set_log_level(logger.DebugLevel.DEBUG, 'Debug Logs/log.txt')
+	assert(logger.from_json('Debug Logs/log_settings.json'))
 	# Creates a new game if one is not found
 	if save_data == null:
 		game.create_new()
