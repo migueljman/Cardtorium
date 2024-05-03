@@ -12,6 +12,7 @@ signal selected_tile(Vector2)
 var card_placement_allowed = false
 var zoom_speed = 0.1
 signal save_game
+signal attempt_place_city(pos: Vector2i)
 
 func _input(event):
 	if event is InputEventMouseButton:
@@ -42,6 +43,12 @@ func _input(event):
 				zoom -= Vector2.ONE * zoom_speed
 			elif keycode == KEY_EQUAL:
 				zoom += Vector2.ONE * zoom_speed
+			elif keycode == KEY_C:
+				var mouse_position = get_global_mouse_position()
+				var world_position = get_global_transform().affine_inverse().basis_xform_inv(mouse_position)
+				var tile_size = Vector2(64, 64)
+				var tile_coordinates: Vector2i = floor(world_position / tile_size)
+				attempt_place_city.emit(tile_coordinates)
 
 func _unhandled_key_input(event):
 	# Checks for save game

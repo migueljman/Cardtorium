@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://0bpg4aa36c5f"
-path="res://.godot/imported/Minecraft.ttf-f9e5ebac2152864760a0577b3c5bd7ed.fontdata"
+uid="uid://bxgrt2vsap58"
+path="res://.godot/imported/PixelOperator.ttf-a140b3a9c67c4d7173dff1bce730d9de.fontdata"
 
 [deps]
 
-source_file="res://Assets/Minecraft.ttf"
-dest_files=["res://.godot/imported/Minecraft.ttf-f9e5ebac2152864760a0577b3c5bd7ed.fontdata"]
+source_file="res://Assets/Fonts/PixelOperator.ttf"
+dest_files=["res://.godot/imported/PixelOperator.ttf-a140b3a9c67c4d7173dff1bce730d9de.fontdata"]
 
 [params]
 
