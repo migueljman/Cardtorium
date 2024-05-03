@@ -104,8 +104,14 @@ func on_card_selected(card_index: int):
 	# If waiting on input, prevents things from happening
 	if state == States.UNIT_ACTION_INPUT:
 		return
+	# If another card was previously selected, must delete the old unit to
+	# prevent a memory leak
+	elif state == States.CARD_SELECTED:
+		active_unit.delete_references()
+		active_unit = null
 	# Deselects any active units
-	deselect_unit()
+	else:
+		deselect_unit()
 	selected_index = card_index
 	active_unit = game.build_unit(game.board.players[game.board.current_player].hand[card_index])
 	valid_tiles = active_unit.get_placeable_tiles()

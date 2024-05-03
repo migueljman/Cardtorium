@@ -83,6 +83,7 @@ func place_from_hand(index: int, x: int, y: int, unit: Unit = null):
 
 ## Goes to the next player's turn
 func end_turn():
+	print('')
 	var prev = board.current_player
 	# Updates current_player
 	board.current_player += 1
@@ -131,6 +132,7 @@ func claim_territory(pos: Vector2i, radius: int, player: int = -2):
 ## Removes a unit from the board
 func remove_unit(unit: Unit):
 	board.units[unit.pos.x][unit.pos.y] = null
+	unit.delete_references()
 	unit_removed.emit(unit)
 
 ## Places a city

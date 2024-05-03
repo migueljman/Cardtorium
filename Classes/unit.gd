@@ -63,4 +63,7 @@ func get_placeable_tiles():
                 continue
             tiles.append(Vector2i(x, y))
     return tiles
-            
+
+## Used to prevent memory leaks
+func delete_references():
+    pass
