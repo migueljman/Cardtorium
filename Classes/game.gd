@@ -56,6 +56,7 @@ func create_new():
 func set_terrain(terrain: Board.Terrain, location: Array[Vector2i]):
 	for position in location:
 		board.tiles[position.x][position.y] = terrain
+	logger.log('game', 'Changed %d tiles to terrain %d' % [len(location), terrain])
 	terrain_updated.emit(location, terrain)
 
 ## Takes a card as input, and creates a unit object from it
