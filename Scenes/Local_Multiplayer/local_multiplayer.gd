@@ -107,11 +107,28 @@ func load_game():
 
 ## Called when the user clicks on a card in their hand.
 func on_card_selected(card_index: int):
+	# If waiting on input, prevents things from happening
+	if state == States.UNIT_ACTION_INPUT:
+		return
+	# If another card was previously selected, must delete the old unit to
+	# prevent a memory leak
+	elif state == States.CARD_SELECTED:
+		active_unit.delete_references()
+		active_unit = null
+	# Deselects any active units
+	else:
+		deselect_unit()
 	selected_index = card_index
 	active_unit = game.build_unit(game.board.players[game.board.current_player].hand[card_index])
 	valid_tiles = active_unit.get_placeable_tiles()
 	move_renderer.draw_black_outlines(valid_tiles)
 	state = States.CARD_SELECTED
+
+## Called when a user deselects a card in their hand
+func on_card_deselected():
+	# Exits card_selected state
+	move_renderer.clear()
+	state = States.DEFAULT
 		
 ## Called when a tile is clicked
 ## Behavior depends on the state
@@ -198,7 +215,11 @@ func on_save_game():
 		
 ## Called when a player presses the end_turn button
 func on_turn_ended(prev_player: int, current_player: Player):
+	# Stops waiting for action input
 	action_input_wait = false
+	# Sets state to default
+	state = States.DEFAULT
+	# Deselects any active units
 	deselect_unit()
 	
 ## Renders a troop card by adding it to the scene tree
@@ -229,3 +250,28 @@ func troop_action(index: int):
 func _on_game_input_requested(options: Array[Vector2i]):
 	valid_tiles = options
 	move_renderer.draw_black_outlines(options)
+
+
+## Called when the user attemps to place a city
+func _on_camera_2d_attempt_place_city(pos:Vector2i):
+	if state != States.DEFAULT:
+		return
+	var board: Board = game.board
+	var player: Player = board.players[board.current_player]
+	if player.cities >= player.max_cities:
+		return
+	for x in range(pos.x - 1, pos.x + 2):
+		if x < 0:
+			continue
+		elif x >= board.SIZE.x:
+			break
+		for y in range(pos.y - 1, pos.y + 2):
+			if y < 0:
+				continue
+			elif y >= board.SIZE.y:
+				break
+			if board.territory[x][y] != board.current_player:
+				return
+			elif board.buildings[x][y] != null and board.buildings[x][y] is City:
+				return
+	player.place_city(game, pos)

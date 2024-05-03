@@ -13,7 +13,7 @@ signal terrain_updated(changed: Array[Vector2i], terrain: Board.Terrain)
 ## Emitted when a troop is placed.
 signal troop_placed(troop: Troop, pos: Vector2i)
 ## Emitted when a player ends their turn.
-signal turn_ended(local_id: int, current_player: Player)
+signal turn_ended(previous: int, current_player: Player)
 ## Emitted when a troop is moved
 signal troop_moved(troop: Troop, path: Array)
 ## Emitted when a unit is removed from the board.
@@ -40,8 +40,8 @@ func create_new():
 	logger.log('game', 'Creating a new game')
 	board = Board.new()
 	# Creates a new board of size 11 x 11
-	var width = 5
-	var height = 5
+	var width = 7
+	var height = 7
 	board.setup(width, height, 2)
 	# for i in range(len(board.players)):
 	# 	board.players[i].setup()
@@ -141,12 +141,12 @@ func claim_territory(pos: Vector2i, radius: int, player: int = -2):
 			board.territory[x][y] = player
 			if old != -1:
 				board.players[old].territory -= 1
-				board.players[old].calculate_rpt()
+				board.players[old].run_territory_calculations()
 			board.players[player].territory += 1
 			claimed.append(Vector2i(x, y))
 	# Emits signals
-	board.players[player].calculate_rpt()
 	logger.log('game', 'Claimed %d tiles for player %d' % [len(claimed), player])
+	board.players[player].run_territory_calculations()
 	territory_claimed.emit(claimed, player)
 	render_topbar.emit(board.turns, board.players[player])
 
@@ -154,6 +154,7 @@ func claim_territory(pos: Vector2i, radius: int, player: int = -2):
 func remove_unit(unit: Unit):
 	logger.log('game', 'Removed unit %s from (%d, %d)' % [unit.base_stats.name, unit.pos.x, unit.pos.y])
 	board.units[unit.pos.x][unit.pos.y] = null
+	unit.delete_references()
 	unit_removed.emit(unit)
 
 ## Places a city
