@@ -47,6 +47,10 @@ func create_new():
 	# 	board.players[i].setup()
 	board.players[0].setup(self, Vector2i(0,board.SIZE.y / 2), 0)
 	board.players[1].setup(self,Vector2i(board.SIZE.x - 1,board.SIZE.y / 2), 1)
+	logger.log('game', 'Starting turn %d' % [board.turns])
+	logger.indent('game')
+	logger.log('game', 'Starting player 0\'s turn')
+	logger.indent('game')
 
 ## Changes the terrain for an array of tiles
 func set_terrain(terrain: Board.Terrain, location: Array[Vector2i]):
@@ -90,17 +94,22 @@ func place_from_hand(index: int, x: int, y: int, unit: Unit = null):
 
 ## Goes to the next player's turn
 func end_turn():
-	logger.log('game', 'Ending player %d\'s turn' % [board.current_player])
+	logger.dedent('game')
 	var prev = board.current_player
 	# Updates current_player
 	board.current_player += 1
 	if board.current_player == board.num_players:
 		board.current_player = 0
 		board.turns += 1
+		logger.dedent('game')
+		logger.log('game', 'Starting turn %d' % [board.turns + 1])
+		logger.indent('game')
 	# Sets next player up to begin their turn
 	#render_topbar.emit(board.turns, board.current_player)
 	board.players[board.current_player].begin_turn()
 	render_topbar.emit(board.turns, board.players[board.current_player])
+	logger.log('game', 'Starting player %d\'s turn' % board.current_player)
+	logger.indent('game')
 	
 	# Lets other nodes know that a player has ended their turn
 	turn_ended.emit(prev, board.players[board.current_player])
