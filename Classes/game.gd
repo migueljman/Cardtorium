@@ -63,10 +63,10 @@ func build_unit(card: Card) -> Unit:
 	match (card.type):
 		# Places a troop card
 		Card.CardType.TROOP:
-			logger.log('game', 'Building a troop (%s)' % [card.name])
+			logger.debug('game', 'Building a troop (%s)' % [card.name])
 			var troop: Troop = Troop.new(self, card)
 			return troop
-	logger.log('game', 'build_unit failed to construct a unit')
+	logger.error('game', 'Failed to construct a unit (%s)' % [card.name])
 	return null
 
 ## Places a unit at position x, y
@@ -78,6 +78,8 @@ func place_unit(unit: Unit, x: int, y: int):
 			unit.pos = Vector2i(x, y)
 			unit.owned_by = board.current_player
 			troop_placed.emit(unit, Vector2i(x, y))
+		_:
+			logger.error('game', 'Unknown unit type. Failed to place %s at (%d, %d)' % [unit.base_stats.name, x, y])
 
 ## Places the nth card in the player's hand onto the board at position x, y
 func place_from_hand(index: int, x: int, y: int, unit: Unit = null):
@@ -85,7 +87,7 @@ func place_from_hand(index: int, x: int, y: int, unit: Unit = null):
 	var card: Card = player.hand[index]
 	if player.resources < card.cost:
 		return
-	logger.log('game', 'Placing card %d from the hand of %s' % [index, player.name])
+	logger.debug('game', 'Placing card %d from the hand of %s' % [index, player.name])
 	player.remove_from_hand(index)
 	render_topbar.emit(board.turns, board.players[board.current_player])
 	if unit == null:

@@ -22,27 +22,49 @@ var default_output = null
 var indent_levels: Dictionary = {'': 0}
 ## Stores what files have been opened.
 var open_files: Dictionary = {'': null}
+## Minimum level of a log message that should be printed.
+var log_level: DebugLevel = DebugLevel.LOG
+## Allows overriding specific files with other debug levels
+var file_log_levels: Dictionary = {}
+## Stores the string form of each debug level
+var level_strings: Array[String] = [
+    "DEBUG", "LOG", "WARNING", "ERROR"
+]
 
-## Increments the indent level for some file.
+
+
+## Debug levels
+enum DebugLevel {
+    ## Very detailed, specific information.
+    DEBUG,
+    ## Only the important runtime information. Used to declutter log files.
+    LOG,
+    ## Something went sort of wrong.
+    WARNING,
+    ## Something went very wrong.
+    ERROR
+}
+
+## Increments the indent level for each file corresponding to some object.
 func indent(object: String):
     if object in output_dict:
-        var filepath = output_dict[object]
-        indent_levels[filepath] += 1
+        for filepath in output_dict[object]:
+            indent_levels[filepath] += 1
     else:
         indent_levels[default_filepath] += 1
 
-## Decrements the indent level for some file.
+## Decrements the indent level for each file corresponding to some object.
 func dedent(object: String):
-    if object in indent_levels:
-        var filepath = output_dict[object]
-        indent_levels[filepath] = max(0, indent_levels[filepath] - 1)
+    if object in output_dict:
+        for filepath in output_dict[object]:
+            indent_levels[filepath] = max(0, indent_levels[filepath] - 1)
     else:
         indent_levels[default_filepath] = max(0, indent_levels[default_filepath] - 1)
 
-## Sets the output file for some object. If filepath is the empty string,
-## sends output to the console. If object is the empty string, sets the
-## default output.
-func set_output(object: String = '', filepath: String = ''):
+## Adds an output file for some object. If the object is the empty string,
+## sets the default filepath instead. An empty string for filepath is
+## interpreted as stdout.
+func add_output(object: String = '', filepath: String = ''):
     var file = null
     # Opens the file if the filepath exists
     if filepath in open_files:
@@ -53,13 +75,27 @@ func set_output(object: String = '', filepath: String = ''):
         file = open_files[filepath]
     # Adds the file as output for some object
     if object != '':
-        output_dict[object] = filepath
+        if object not in output_dict:
+            output_dict[object] = []
+        elif filepath in output_dict[object]:
+            return
+        output_dict[object].append(filepath)
     else:
         default_filepath = filepath
         default_output = file
 
-## Logs a message.
-func log(object: String, message: String):
+## Sets the log level for some file. If the file is the empty string,
+## sets the default log level.
+func set_log_level(level: DebugLevel, file: String = ''):
+    if file == '':
+        log_level = level
+    else:
+        file_log_levels[file] = level
+
+## Core functionality for sending a message.
+## It's probably easier to just use [method log], [method debug],
+## [method warning] and/or [method error].
+func _send_message(object: String, message: String, level: DebugLevel):
     if not enabled:
         return
     # Checks if the object is blacklisted, or not whitelisted
@@ -68,15 +104,39 @@ func log(object: String, message: String):
     elif whitelist and object not in whitelist:
         return
     # Checks where to send the message
-    var output = default_output
-    var filepath = default_filepath
+    var outputs = [default_output]
+    var filepaths = [default_filepath]
     if object in output_dict:
-        filepath = output_dict[object]
-        output = open_files[filepath]
+        outputs = []
+        filepaths = []
+        for path in output_dict[object]:
+            filepaths.append(path)
+            outputs.append(open_files[path])
     # Prints the message
-    if output == null:
-        print('(%s) %s' % [object, message])
-    else:
-        var indent_level = indent_levels[filepath]
-        var indent_string: String = INDENT.repeat(indent_level)
-        output.store_string('%s(%s) %s\n' % [indent_string, object, message])
+    for i in range(len(outputs)):
+        var output = outputs[i]
+        var filepath = filepaths[i]
+        if level < file_log_levels.get(filepath, log_level):
+            continue
+        if output == null:
+            print('(%s) %s' % [object, message])
+        else:
+            var indent_level = indent_levels[filepath]
+            var indent_string: String = INDENT.repeat(indent_level)
+            output.store_string('%s%s (%s): %s\n' % [indent_string, level_strings[level], object, message])
+
+## Logs a message.
+func log(object: String, message: String):
+    _send_message(object, message, DebugLevel.LOG)
+
+## Sends a debug message
+func debug(object: String, message: String):
+    _send_message(object, message, DebugLevel.DEBUG)
+
+## Sends a warning.
+func warning(object: String, message: String):
+    _send_message(object, message, DebugLevel.WARNING)
+
+## Sends an error.
+func error(object: String, message: String):
+    _send_message(object, message, DebugLevel.ERROR)

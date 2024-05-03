@@ -38,8 +38,16 @@ enum States {
 ## The current state of the game
 var state: States = States.DEFAULT
 
+@onready var logger = get_node('/root/DebugLog')
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	# Sets up the logger
+	logger.enabled = true
+	logger.add_output('', 'Debug Logs/log.txt')
+	logger.add_output('game', '')
+	logger.add_output('game', 'Debug Logs/log.txt')
+	logger.set_log_level(logger.DebugLevel.DEBUG, 'Debug Logs/log.txt')
 	# Creates a new game if one is not found
 	if save_data == null:
 		game.create_new()
@@ -72,6 +80,8 @@ func _ready():
 ## Loads a game from a save file.
 func load_game():
 	var board: Board = game.board
+	logger.log('game', 'Starting game on player %s\'s turn' % [board.players[board.current_player].name])
+	logger.indent('game')
 	# Renders all of the cities on the board
 	for row in board.buildings:
 		for building in row:
