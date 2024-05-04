@@ -128,6 +128,8 @@ func on_card_selected(card_index: int):
 func on_card_deselected():
 	# Exits card_selected state
 	move_renderer.clear()
+	active_unit.delete_references()
+	active_unit = null
 	state = States.DEFAULT
 		
 ## Called when a tile is clicked
@@ -219,6 +221,8 @@ func on_turn_ended(prev_player: int, current_player: Player):
 	action_input_wait = false
 	# Sets state to default
 	state = States.DEFAULT
+	# Saves the game
+	on_save_game()
 	# Deselects any active units
 	deselect_unit()
 	
