@@ -153,8 +153,9 @@ func claim_territory(pos: Vector2i, radius: int, player: int = -2):
 ## Removes a unit from the board
 func remove_unit(unit: Unit):
 	logger.log('game', 'Removed unit %s from (%d, %d)' % [unit.base_stats.name, unit.pos.x, unit.pos.y])
-	board.units[unit.pos.x][unit.pos.y] = null
-	unit.delete_references()
+	if unit is Troop:
+		board.units[unit.pos.x][unit.pos.y] = null
+		unit.delete_references()
 	unit_removed.emit(unit)
 
 ## Places a city
