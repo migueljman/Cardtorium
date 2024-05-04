@@ -4,6 +4,8 @@ extends Node
 var INDENT: String = '    '
 ## Whether or not logging is enabled at all
 var enabled: bool = false
+## Whether or not to indent when printing to console
+var indent_stdout: bool = false
 ## If this list is non-empty, only objects that match a name in this
 ## list will be logged.
 var whitelist: Array[String] = []
@@ -64,6 +66,12 @@ func from_json(filepath: String) -> bool:
                 print('"enabled" must correspond to a boolean')
                 return false
             enabled = value
+        # Checks for indent stdout
+        elif key == 'indent_stdout':
+            if not value is bool:
+                print('"indent_stdout" must correspond to a boolean')
+                return false
+            indent_stdout = value
         # Checks for default_output
         elif key == "default_output":
             if value == 'stdout':
@@ -225,12 +233,16 @@ func _send_message(object: String, message: String, level: DebugLevel):
         if level < file_log_levels.get(filepath, log_level):
             continue
         if output == null:
+            var indent_level = indent_levels[filepath]
+            var indent_string: String = ''
+            if indent_stdout:
+                indent_string = INDENT.repeat(indent_level)
             if level == DebugLevel.WARNING:
-                print_rich('[color=yellow]WARNING (%s):[/color] %s' % [object, message])
+                print_rich('%s[color=yellow]WARNING (%s):[/color] %s' % [indent_string, object, message])
             elif level == DebugLevel.ERROR:
-                print_rich('[color=red]ERROR (%s):[/color] %s' % [object, message])
+                print_rich('%s[color=red]ERROR (%s):[/color] %s' % [indent_string, object, message])
             else:
-                print('(%s) %s' % [object, message])
+                print('%s(%s) %s' % [indent_string, object, message])
         else:
             var indent_level = indent_levels[filepath]
             var indent_string: String = INDENT.repeat(indent_level)
