@@ -3,6 +3,7 @@ extends TroopAttribute
 # Logic for the Healer attribute
 
 func build_action() -> Action:
+    logger.debug('troop_attribute', '(HEALER) Building the \'Heal\' action')
     var action: Action = Action.new()
     action.name = "Healer"
     action.description = attribute.description
@@ -10,6 +11,8 @@ func build_action() -> Action:
     return action
 
 func heal_nearby():
+    logger.log('troop_attribute', '(HEALER) Healing units in a 1-tile radius')
+    logger.indent('troop_attribute')
     for x in range(parent.pos.x - 1, parent.pos.x + 2):
         if x < 0:
             continue
@@ -26,4 +29,5 @@ func heal_nearby():
             if ally.owned_by == parent.owned_by:
                 var amount: int = parent.health / 4
                 ally.health = clampi(ally.heath + amount, 0, ally.base_stats.health)
-                
+                logger.debug('troop_attribute', '(HEALER) Healing unit at (%d, %d)' % [ally.pos.x, ally.pos.y])
+    logger.dedent('troop_attribute')

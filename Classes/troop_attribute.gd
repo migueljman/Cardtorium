@@ -10,6 +10,8 @@ class_name TroopAttribute
 var parent: Troop
 ## The game state
 var board: Board
+## Used to print debug messages
+var logger
 
 ## Attaches the troop attribute to a game object and a troop object.
 ## Also sets up the attribute's description.
@@ -17,6 +19,7 @@ func setup(attribute_id: int, game: Game, troop: Troop):
     attribute = load("res://Attributes/Troops/Data/attribute_{0}.tres".format({0: attribute_id}))
     parent = troop
     board = game.board
+    logger = game.logger
 
 # Virtual function which can be overwritten by children
 func on_moved(from: Vector2i, to: Vector2i):

@@ -6,11 +6,16 @@ extends TroopAttribute
 func on_attack(defender: Unit):
     var defender_pos = defender.pos
     var splash_tiles = defender._get_surrounding(defender_pos, 1)
+    logger.debug('troop_attribute', '(SPLASH) Checking for units in range')
 
+    logger.indent('troop_attribute')
     for tile in splash_tiles:
         var unit_at_tile = board.units[tile.x][tile.y]
         if unit_at_tile != null:
+            logger.debug('troop_attribute', '(SPLASH) Applying damage to %s at (%d, %d)'
+                % [unit_at_tile.base_stats.name, unit_at_tile.pos.x, unit_at_tile.pos.y])
             apply_splash_damage(unit_at_tile)
+    logger.dedent('troop_attribute')
 
 #Applies splash damage to enemy
 
