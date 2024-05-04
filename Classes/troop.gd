@@ -349,6 +349,7 @@ func move(destination: Vector2i):
 	can_attack = false
 	can_move = false
 	# Emits the move signal
+	logger.indent('troop')
 	var path: Array = move_graph[destination]
 	clear_fog()
 	game.troop_moved.emit(self, path)
@@ -358,17 +359,21 @@ func move(destination: Vector2i):
 	# Emits the done signal
 	if not can_act and not can_attack and not can_move:
 		game.troop_toggle_act.emit(self)
+	logger.dedent('troop')
 
 ## Clears data which is generated on selection
 func clear():
-	logger.debug('troop', 'Clearing troop %s' % [base_stats.name])
+	logger.debug('troop', 'Clearing data for troop %s' % [base_stats.name])
 	move_graph = {}
 	attack_list = {}
 	actions = []
 
 ## Resets a troop at the end of a turn
 func reset(prev: int, player: Player):
-	logger.debug('troop', 'Troop %s at (%d, %d) is handling end_turn' % [base_stats.name, pos.x, pos.y])
+	if player.local_id != owned_by:
+		return
+	logger.debug('troop', 'Resetting troop %s at (%d, %d)' % [base_stats.name, pos.x, pos.y])
+	logger.indent('troop')
 	clear()
 	# Resets abilities
 	can_move = true
@@ -382,7 +387,7 @@ func reset(prev: int, player: Player):
 	# Runs through attributes
 	for attr in attributes:
 		attr.reset()
-	# game.troop_toggle_act(self)
+	logger.dedent('troop')
 
 ## Builds the troop's action list
 func build_action_list():
