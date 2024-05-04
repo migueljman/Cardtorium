@@ -66,6 +66,8 @@ func from_json(filepath: String) -> bool:
             enabled = value
         # Checks for default_output
         elif key == "default_output":
+            if value == 'stdout':
+                value = ''
             add_output('', value)
         # Checks for whitelist
         elif key == "whitelist":
