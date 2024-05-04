@@ -24,6 +24,6 @@ func heal_nearby():
                 continue
             var ally: Troop = board.units[x][y]
             if ally.owned_by == parent.owned_by:
-	            var amount: int = parent.health / 4
-	            ally.health = clampi(ally.heath + amount, 0, ally.base_stats.health)
+                var amount: int = parent.health / 4
+                ally.health = clampi(ally.heath + amount, 0, ally.base_stats.health)
                 
