@@ -65,6 +65,7 @@ func from_card(_game: Game, card: Card):
 ## Prevents memory leaks by deleting all references to attributes and to
 ## the troop itself. This allows Godot's GC to kick in properly.
 func delete_references():
+	logger.log('troop', 'Deleting all attributes from troop %s at (%d, %d)' % [base_stats.name, pos.x, pos.y])
 	for i in range(len(attributes)):
 		attributes[i].parent = null
 		attributes[i] = null
@@ -252,10 +253,10 @@ func _calc_move_cost(strength: float, from: Vector2i, to: Vector2i) -> float:
 ## Builds an array of tiles that the unit can attack
 func build_attack_list():
 	logger.debug('troop', 'Building attack list for %s at (%d, %d)' % [base_stats.name, pos.x, pos.y])
-	logger.indent('troop')
 	attack_list = {}
 	if not can_attack:
 		return
+	logger.indent('troop')
 	for x in range(pos.x - rng, pos.x + rng + 1):
 		if x < 0:
 			continue
@@ -312,6 +313,7 @@ func attack_unit(defender: Unit):
 	if health <= 0:
 		health = 0
 		game.remove_unit(self)
+		return
 	damaged.emit()
 	# Runs through attributes if it survives
 	logger.indent('troop')

@@ -232,7 +232,7 @@ func _send_message(object: String, message: String, level: DebugLevel):
         else:
             var indent_level = indent_levels[filepath]
             var indent_string: String = INDENT.repeat(indent_level)
-            output.store_string('%s%s (%s): %s\n' % [indent_string, level_strings[level], object, message])
+            output.store_string('%s(%s): %s\n' % [indent_string, object, message])
 
 ## Logs a message.
 func log(object: String, message: String):
