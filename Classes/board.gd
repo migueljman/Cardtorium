@@ -73,14 +73,17 @@ func setup(wid: int, height: int, _num_players: int):
 	var card4: Card = load('res://Cards/Buildings/building_3.tres')
 	var deck: Array[Card] = [
 		card1, card2, card3, card4,
-		card1, card2, card3, card4,
-		card1, card2, card3, card4,
-		card1, card2, card3, card4,
-		card1, card2, card3, card4,
-		card1, card2, card3, card4
+		card1, card2, card3,
+		card1, card2, card3, 
+		card1, card2, card3, 
+		card1, card2, card3, 
+		card1, card2, card3 
 	]
+	var deck2: Array[Card] = []
+	for card in deck:
+		deck2.append(card)
 	players.append(Player.new(SIZE, deck))
-	players.append(Player.new(SIZE, deck))
+	players.append(Player.new(SIZE, deck2))
 	# Vector2i(0,SIZE.y / 2), 
 	# Vector2i(SIZE.x - 1,SIZE.y / 2), 
 	# TODO the name should be read from somewhere else, maybe the main menu
