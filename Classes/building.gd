@@ -16,6 +16,7 @@ var defense: int
 ## Creates a new building from a corresponding card
 func _init(_game: Game, card: Card = null):
     # Loads stats
+    card_type = Card.CardType.BUILDING
     base_stats = card
     game = _game
     defense = base_stats.defense
@@ -33,6 +34,8 @@ func _init(_game: Game, card: Card = null):
 
 ## Determines which tiles the building can be placed on
 func get_placeable_tiles() -> Array[Vector2i]:
+    if game.board.players[owned_by].resources < base_stats.cost:
+        return [] as Array[Vector2i]
     var tiles: Array[Vector2i] = []
     for x in range(game.board.SIZE.x):
         for y in range(game.board.SIZE.x):

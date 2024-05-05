@@ -1224,6 +1224,7 @@ tile_set = SubResource("TileSet_lx3aq")
 format = 2
 script = ExtResource("17_ls0ak")
 
+[connection signal="building_placed" from="Game" to="." method="render_building"]
 [connection signal="city_placed" from="Game" to="." method="render_city"]
 [connection signal="input_requested" from="Game" to="." method="_on_game_input_requested"]
 [connection signal="render_topbar" from="Game" to="GUI_Renderer/Control/TopBar/ColorRect/RichTextLabel" method="_on_game_render_topbar"]

@@ -94,7 +94,6 @@ func place_from_hand(index: int, x: int, y: int, unit: Unit = null):
 
 ## Goes to the next player's turn
 func end_turn():
-	print('')
 	var prev = board.current_player
 	# Updates current_player
 	board.current_player += 1
