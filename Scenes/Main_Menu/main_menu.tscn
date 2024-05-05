@@ -96,6 +96,7 @@ alignment = 1
 layout_mode = 2
 
 [node name="Start_Button" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+texture_filter = 6
 custom_minimum_size = Vector2(120, 32)
 layout_mode = 2
 theme_override_font_sizes/font_size = 24

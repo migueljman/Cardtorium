@@ -1,12 +1,13 @@
 extends Control
 @onready var back_button = $Back as Button
 @onready var items = $ScrollContainer/Items
-var card_scene = preload ("res://Scenes/Card_Renderer/Card.tscn")
-var cardsize = Vector2(1205, 1576)
+var card_scene = preload ("res://Scenes/Card_Renderer/small_card.tscn")
+var cardsize = Vector2(224, 273)
 var max_cards_per_hbox = 4
 var current_hbox: HBoxContainer = null
 var hbox_count = 0
-var card_scale: float = 0.2
+var card_scale: float = 1
+var all_cards: Array
 
 signal exit_browser
 
@@ -28,12 +29,14 @@ func on_exit_browser_pressed():
 
 ## Adds a card to the currently processed hbox
 func add_card(card_data: Resource, card_index: int):
-	if current_hbox == null or current_hbox.get_child_count() >= max_cards_per_hbox:
-		new_hbox()
+	# if current_hbox == null or current_hbox.get_child_count() >= max_cards_per_hbox:
+	# 	new_hbox()
 	var card = card_scene.instantiate()
-	current_hbox.add_child(card)
-	current_hbox.add_theme_constant_override("separation", 30)
+	# current_hbox.add_child(card)
+	# current_hbox.add_theme_constant_override("separation", 10)
+	items.add_child(card)
 	card.setup(card_data, card_index)
+	all_cards.append(card)
 
 ## Creates a new hbox
 func new_hbox():
@@ -54,3 +57,4 @@ func load_and_display_cards():
 			file_name = dir.get_next()
 	else:
 		print("An error occurred when trying to access the path.")
+
