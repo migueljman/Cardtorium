@@ -6,17 +6,14 @@ class_name Game
 
 ## Contains the game's data. Saving the board to disk allows
 ## saving and loading games.
-var board: Board = Board.new()
-
-## Number of players
-var num_players: int
+var board: Board = null
 
 ## Notifies other nodes when a set of terrain tiles is changed.
 signal terrain_updated(changed: Array[Vector2i], terrain: Board.Terrain)
 ## Emitted when a troop is placed.
 signal troop_placed(troop: Troop, pos: Vector2i)
 ## Emitted when a player ends their turn.
-signal turn_ended(local_id: int, current_player: Player)
+signal turn_ended(previous: int, current_player: Player)
 ## Emitted when a troop is moved
 signal troop_moved(troop: Troop, path: Array)
 ## Emitted when a unit is removed from the board.
@@ -36,18 +33,19 @@ signal input_received(choice: Vector2i)
 ## Emitted when a building is placed
 signal building_placed(building: Building, pos: Vector2i)
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
+@onready var win_scene = preload ("res://Scenes/Local_Multiplayer/wins.tscn") as PackedScene
+
+## Creates a new game from scratch
+func create_new():
 	board = Board.new()
 	# Creates a new board of size 11 x 11
-	var width = 5
-	var height = 5
+	var width = 7
+	var height = 7
 	board.setup(width, height, 2)
 	# for i in range(len(board.players)):
 	# 	board.players[i].setup()
 	board.players[0].setup(self, Vector2i(0,board.SIZE.y / 2), 0)
 	board.players[1].setup(self,Vector2i(board.SIZE.x - 1,board.SIZE.y / 2), 1)
-	num_players = 2
 
 ## Changes the terrain for an array of tiles
 func set_terrain(terrain: Board.Terrain, location: Array[Vector2i]):
@@ -96,10 +94,11 @@ func place_from_hand(index: int, x: int, y: int, unit: Unit = null):
 
 ## Goes to the next player's turn
 func end_turn():
+	print('')
 	var prev = board.current_player
 	# Updates current_player
 	board.current_player += 1
-	if board.current_player == num_players:
+	if board.current_player == board.num_players:
 		board.current_player = 0
 		board.turns += 1
 	# Sets next player up to begin their turn
@@ -110,9 +109,6 @@ func end_turn():
 	# Lets other nodes know that a player has ended their turn
 	turn_ended.emit(prev, board.players[board.current_player])
 	
-	print("end turn clicked")
-	print(board.current_player)
-	print(board.turns)
 
 ## Claims territory in a radius for a player.
 ## Passing a -1 for the player parameter will unclaim territory.
@@ -136,17 +132,18 @@ func claim_territory(pos: Vector2i, radius: int, player: int = -2):
 			board.territory[x][y] = player
 			if old != -1:
 				board.players[old].territory -= 1
-				board.players[old].calculate_rpt()
+				board.players[old].run_territory_calculations()
 			board.players[player].territory += 1
 			claimed.append(Vector2i(x, y))
 	# Emits signals
-	board.players[player].calculate_rpt()
+	board.players[player].run_territory_calculations()
 	territory_claimed.emit(claimed, player)
 	render_topbar.emit(board.turns, board.players[player])
 
 ## Removes a unit from the board
 func remove_unit(unit: Unit):
 	board.units[unit.pos.x][unit.pos.y] = null
+	unit.delete_references()
 	unit_removed.emit(unit)
 
 ## Places a city
@@ -157,3 +154,6 @@ func place_city(pos: Vector2i):
 	city.position = 64 * pos
 	board.buildings[pos.x][pos.y] = city
 	city_placed.emit(city)
+
+func win_screen():
+	get_tree().change_scene_to_packed(win_scene)

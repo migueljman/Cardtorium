@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://q4ols1tm0d0"
-path="res://.godot/imported/idle_15.png-ebfbba4bd388363775bea43aed9cf126.ctex"
+uid="uid://bc1ts2xj7y448"
+path="res://.godot/imported/Resized Hero Sprite.png-c700751a9b93bcd7db437a00430e07eb.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Troop Sprites/idle_15.png"
-dest_files=["res://.godot/imported/idle_15.png-ebfbba4bd388363775bea43aed9cf126.ctex"]
+source_file="res://Assets/Troop Sprites/Resized Hero Sprite.png"
+dest_files=["res://.godot/imported/Resized Hero Sprite.png-c700751a9b93bcd7db437a00430e07eb.ctex"]
 
 [params]
 

@@ -11,8 +11,12 @@ var YPOS = 550
 var cards := []
 var card_history := [] # Keep track of last card and current card selected
 var clicks = 0
-signal card_selected(card: Card)
 var cardsize = Vector2(1205, 1576)
+
+## Emitted when a card is pressed by the user.
+signal card_selected(card_index: int)
+## Emitted when a previously selected card is deselected.
+signal card_deselected
 
 ## Initializes the hand renderer by connecting it to a player's hand
 func connect_to_player(p: Player):
@@ -60,6 +64,7 @@ func on_card_unfocused(card_index: int):
 func on_card_clicked(card_index: int):
 	if cards[card_index].is_selected:
 		deselect_card(card_index)
+		card_deselected.emit()
 	else:
 		card_history.append(card_index)
 		if card_history.size() > 1:

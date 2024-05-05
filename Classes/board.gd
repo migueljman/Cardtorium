@@ -6,36 +6,39 @@ extends Resource
 class_name Board
 
 ## Defines the terrain types
-enum Terrain {GRASS=-1, FOREST, MOUNTAIN, WATER}
+enum Terrain {GRASS = -1, FOREST, MOUNTAIN, WATER}
 
 ## 2D array which stores the terrain data for each grid
 ## of the board
-var tiles: Array = []
+@export var tiles: Array = []
 
 ## 2D array which stores territory data.
 ## A -1 means that the tile is unclaimed, whereas
 ## a nonnegative integer means that the tile has been
 ## claimed by player with that local id.
-var territory: Array = []
+@export var territory: Array = []
 
 ## 2D array which stores card locations.
-var units: Array = []
+@export var units: Array = []
 
-## Stores the players of the game
-var players: Array[Player]
+## Stores the players of the game.
+@export var players: Array[Player] = []
 
 ## Which player is currently taking their turn
-var current_player: int = 0
+@export var current_player: int = 0
 
 ## The number of turns taken in the game
-var turns: int = 0
+@export var turns: int = 0
 
 ## Array which stores the position of buildings.
 ## Cities are included in this array.
-var buildings: Array = []
+@export var buildings: Array = []
 
 ## The size of the board (in tiles) encoded as a vector
-var SIZE: Vector2i
+@export var SIZE: Vector2i
+
+## The number of players in the game.
+@export var num_players: int
 
 ## Allocates memory to set up an empty board with wid x height tiles.
 func setup(wid: int, height: int, _num_players: int):
@@ -53,7 +56,7 @@ func setup(wid: int, height: int, _num_players: int):
 		# Sets the territory
 		territory[x] = []
 		territory[x].resize(height)
-		territory[x].fill(-1)
+		territory[x].fill( - 1)
 		# Sets the units array
 		units[x] = []
 		units[x].resize(height)
@@ -83,3 +86,4 @@ func setup(wid: int, height: int, _num_players: int):
 	# TODO the name should be read from somewhere else, maybe the main menu
 	players[0].name = "Player_0"
 	players[1].name = "Player_1"
+	num_players = _num_players

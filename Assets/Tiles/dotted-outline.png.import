@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://q4ols1tm0d0"
-path="res://.godot/imported/idle_15.png-ebfbba4bd388363775bea43aed9cf126.ctex"
+uid="uid://gojiput4iik6"
+path="res://.godot/imported/dotted-outline.png-79f31cee89d8ddbd7e5e670f07ac5850.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Troop Sprites/idle_15.png"
-dest_files=["res://.godot/imported/idle_15.png-ebfbba4bd388363775bea43aed9cf126.ctex"]
+source_file="res://Assets/Tiles/dotted-outline.png"
+dest_files=["res://.godot/imported/dotted-outline.png-79f31cee89d8ddbd7e5e670f07ac5850.ctex"]
 
 [params]
 

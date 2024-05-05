@@ -8,6 +8,7 @@ extends Control
 @onready var browser_menu = $Browser
 @onready var margin_container = $MarginContainer as MarginContainer
 @export var start_level = preload ("res://Scenes/Local_Multiplayer/local_multiplayer.tscn") as PackedScene
+@export var game_menu = preload ("res://Scenes/Game_Menu/game_menu.tscn") as PackedScene
 
 # Title Color
 @onready var title1 = $MarginContainer/VBoxContainer/Title1
@@ -35,7 +36,7 @@ func _ready():
 	bgs[index].visible = true
 	
 func on_start_pressed() -> void:
-	get_tree().change_scene_to_packed(start_level)
+	get_tree().change_scene_to_packed(game_menu)
 
 func on_options_pressed() -> void:
 	margin_container.visible = false

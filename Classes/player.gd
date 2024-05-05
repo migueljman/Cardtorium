@@ -13,33 +13,37 @@ signal fog_cleared(tiles: Array[Vector2i])
 signal fog_placed(tiles: Array[Vector2i])
 
 ## How many cities the player owns
-var cities: int
+@export var cities: int
 ## How many cards a player can have in their hand
-var hand_size: int = 7
+@export var hand_size: int = 7
 ## How much territory the player owns
-var owned: int
+@export var owned: int
 ## The player's local id. Is set by the game object
-var local_id: int
+@export var local_id: int
 ## The player's name. TODO need to figure out where to set this. Maybe somewhere in main menu?
-var name: String
+@export var name: String
 ## Stores the tiles which have yet to be discovered. An undiscovered tile is
 ## denoted by false, discovered by true
-var discovered: Array
+@export var discovered: Array
 ## Location of the home base.
-var base_position: Vector2i
+@export var base_position: Vector2i
 ## How many resources the player owns
-var resources: int = 3
+@export var resources: int = 3
 ## How many resources per turn the player earns
-var rpt: int = 2
+@export var rpt: int = 2
 ## The player's deck. The front of the array is the top of the deck.
-var deck: Array[Card]
+@export var deck: Array[Card]
 ## The player's hand
-var hand: Array[Card]
+@export var hand: Array[Card]
 ## How much territory the player has
-var territory: int
+@export var territory: int
+## Max number of cities that the player can place
+@export var max_cities: int = 1
 
 ## Creates a new player resource from scratch
-func _init(board_size: Vector2i, _deck: Array[Card]):
+func _init(board_size: Vector2i = Vector2i(0, 0), _deck: Array[Card] = []):
+	if board_size == Vector2i(0, 0) or len(_deck) == 0:
+		return
 	randomize()
 	discovered = []
 	for x in range(board_size.x):
@@ -49,9 +53,9 @@ func _init(board_size: Vector2i, _deck: Array[Card]):
 	# Claims territory in a 1-tile radius
 	deck = _deck
 
-
 ## Sets up player data
 func setup(game: Game, base_position: Vector2i, index: int):
+	self.base_position = base_position
 	var board_size = game.board.SIZE
 	# Clears the fog in a 2-tile radius around the home base
 	for x in range(base_position.x - 2, base_position.x + 3):
@@ -130,6 +134,14 @@ func remove_from_hand(index: int):
 	cards_removed.emit(old_hand, hand)
 	shuffle_card(card)
 
-## Calculates resources per turn
-func calculate_rpt():
+## Places a city for the player
+func place_city(game: Game, pos: Vector2i):
+	game.place_city(pos)
+	cities += 1
+	game.render_topbar.emit(game.board.turns, self)
+
+## Runs calculations which depend on territory
+func run_territory_calculations():
 	rpt = 2 + (territory / 20)
+	max_cities = 1 + (territory / 15)
+	hand_size = max(5, 1 + (territory / 15))

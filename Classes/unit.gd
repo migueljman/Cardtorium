@@ -1,4 +1,4 @@
-extends Node
+extends Resource
 
 ## Represents a single troop on the game board
 class_name Unit
@@ -7,19 +7,26 @@ class_name Unit
 ## Member variables
 
 ## The unit's position
+@export
 var pos: Vector2i = Vector2i()
 ## Current health of the unit
+@export
 var health: int
 ## Current attack of the unit
+@export
 var attack: int
 ## Current range of the unit
+@export
 var rng: int
 ## Stores active status effects.
+@export
 var effects = []
 ## Keeps track of which player currently owns the unit
+@export
 var owned_by: int
 ## The base stats of the unit.
 ## WARNING: Do not modify!
+@export
 var base_stats: Card
 ## Dependency injection of the game object.
 ## Used to send signals and such.
@@ -41,6 +48,8 @@ func being_attacked(attacker: Unit, attack: int, attack_force: float) -> int:
 ## Used to highlight squares that the troop can be placed on.
 ## TODO: Possibly add support for an attribute which modifies this method
 func get_placeable_tiles() -> Array[Vector2i]:
+    if base_stats.cost > game.board.players[game.board.current_player].resources:
+        return [] as Array[Vector2i]
     var tiles: Array[Vector2i] = []
     for x in range(game.board.SIZE.x):
         for y in range(game.board.SIZE.x):
@@ -54,3 +63,7 @@ func get_placeable_tiles() -> Array[Vector2i]:
                 continue
             tiles.append(Vector2i(x, y))
     return tiles
+
+## Used to prevent memory leaks
+func delete_references():
+    pass
