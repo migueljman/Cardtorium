@@ -58,3 +58,36 @@ func load_and_display_cards():
 	else:
 		print("An error occurred when trying to access the path.")
 
+
+## Used to sort the cards by name
+func order_by_name(card1, card2) -> bool:
+	return card1.card.name.to_lower() <= card2.card.name.to_lower()
+
+## Used to sort the cards by rarity. Within a rarity group, cards are ordererd by name.
+func order_by_rarity(card1, card2) -> bool:
+	var rarity1: Card.CardRarity = card1.card.rarity
+	var rarity2: Card.CardRarity = card2.card.rarity
+	if rarity1 != rarity2:
+		return rarity1 <= rarity2
+	else:
+		return card1.card.name.to_lower() <= card2.card.name.to_lower()
+
+## Used to sort the cards by cost. Within a cost, cards are ordered by name
+func order_by_cost(card1, card2) -> bool:
+	var cost1 = card1.card.cost
+	var cost2 = card2.card.cost
+	if cost1 != cost2:
+		return cost1 < cost2
+	else:
+		return card1.card.name.to_lower() <= card2.card.name.to_lower()
+
+## Sorts the cards
+func sort_cards(index: int):
+	if index < 0:
+		return
+	var sort_funcs = [order_by_name, order_by_rarity, order_by_cost]
+	all_cards.sort_custom(sort_funcs[index])
+	var i: int = 0
+	for card in all_cards:
+		items.move_child(card, i)
+		i += 1
