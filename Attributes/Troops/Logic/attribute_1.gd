@@ -4,4 +4,5 @@ extends TroopAttribute
 
 
 func on_attack(defender: Unit):
+	logger.debug('troop_attribute', '(RTREAT) Overriding can_move to true')
 	parent.can_move = true

@@ -1,0 +1,19 @@
+{
+	"enabled": true,
+	"indent_stdout": true,
+	"whitelist": [],
+	"blacklist": [],
+	"output": {
+		"game": [
+			"stdout",
+			"Debug Logs/log.txt",
+			"Debug Logs/game.txt"
+		]
+	},
+	"default_output": "Debug Logs/log.txt",
+	"levels": {
+		"Debug Logs/log.txt": "DEBUG",
+		"Debug Logs/game.txt": "DEBUG",
+		"stdout": "WARNING"
+	}
+}

@@ -23,18 +23,22 @@ var move_graph = null
 var actions: Array[Action]
 ## A list of all troops / buildings that this troop can attack
 var attack_list: Dictionary
+## Used to print debug messages
+var logger
 
 ## Emitted when the troop takes damage
 signal damaged
 
-
 ## Creates a new troop
 func _init(_game: Game = null, card: Card = null):
 	if _game != null:
+		logger = _game.logger
 		from_card(_game, card)
 
 ## Initiallizes a troop object from a card.
 func from_card(_game: Game, card: Card):
+	logger.debug('troop', 'Creating troop from card with ID %d' % [card.id])
+	logger.indent('troop')
 	self.game = _game
 	self.id = card.id
 	self.base_stats = card
@@ -48,16 +52,20 @@ func from_card(_game: Game, card: Card):
 	card_type = Card.CardType.TROOP
 	# Loads attributes
 	for attribute_id in self.base_stats.attributes:
+		logger.debug('troop', 'Attaching logic for attribute %d' % [attribute_id])
 		var attribute_file = load('res://Attributes/Troops/Logic/attribute_{0}.gd'.format({0: attribute_id}))
 		if attribute_file == null:
+			logger.error('troop', 'Failed to locate logic for attribute %d' % [attribute_id])
 			continue
 		var attribute: TroopAttribute = attribute_file.new()
 		attribute.setup(attribute_id, game, self)
 		attributes.append(attribute)
+	logger.dedent('troop')
 
 ## Prevents memory leaks by deleting all references to attributes and to
 ## the troop itself. This allows Godot's GC to kick in properly.
 func delete_references():
+	logger.log('troop', 'Deleting all attributes from troop %s at (%d, %d)' % [base_stats.name, pos.x, pos.y])
 	for i in range(len(attributes)):
 		attributes[i].parent = null
 		attributes[i] = null
@@ -68,6 +76,7 @@ func setup():
 	game.turn_ended.connect(reset)
 	for attr in attributes:
 		attr.setup(attr.attribute.id, game, self)
+	logger = game.logger
 
 ## Clears fog in a radius around the card
 func clear_fog():
@@ -112,6 +121,7 @@ func _get_surrounding(center: Vector2i, radius: int) -> Array[Vector2i]:
 
 ## Builds a graph of the tiles that the unit can move to.
 func build_graph():
+	logger.debug('troop', 'Building move graph for %s' % [base_stats.name])
 	var graph: Dictionary = {}
 	if not can_move:
 		graph[pos] = [pos]
@@ -242,9 +252,11 @@ func _calc_move_cost(strength: float, from: Vector2i, to: Vector2i) -> float:
 
 ## Builds an array of tiles that the unit can attack
 func build_attack_list():
+	logger.debug('troop', 'Building attack list for %s at (%d, %d)' % [base_stats.name, pos.x, pos.y])
 	attack_list = {}
 	if not can_attack:
 		return
+	logger.indent('troop')
 	for x in range(pos.x - rng, pos.x + rng + 1):
 		if x < 0:
 			continue
@@ -259,7 +271,9 @@ func build_attack_list():
 				var troop: Troop = game.board.units[x][y]
 				if troop.owned_by == owned_by:
 					continue
+				logger.debug('troop', 'Found enemy at (%d, %d)' % [x, y])
 				attack_list[Vector2i(x, y)] = troop
+	logger.dedent('troop')
 
 ## Called when the unit is attacked
 func being_attacked(attacker: Unit, atk: int, attack_force: float) -> int:
@@ -278,6 +292,7 @@ func being_attacked(attacker: Unit, atk: int, attack_force: float) -> int:
 	# Runs through attributes
 	for attr in attributes:
 		attr.on_attacked(attacker)
+	logger.log('troop', 'Troop %s at (%d, %d) is counter-attacking' % [base_stats.name, pos.x, pos.y])
 	# Calculates counter damage
 	var counter_damage: int = floor((def_force / (attack_force + def_force)) * defense)
 	return counter_damage
@@ -286,6 +301,8 @@ func being_attacked(attacker: Unit, atk: int, attack_force: float) -> int:
 func attack_unit(defender: Unit):
 	if not can_attack:
 		return
+	logger.log('troop', 'Troop %s at (%d, %d) attacking %s at (%d, %d)' %
+		[base_stats.name, pos.x, pos.y, defender.base_stats.name, defender.pos.x, defender.pos.y])
 	var atk_force = attack * float(self.health) / float(base_stats.health)
 	health -= defender.being_attacked(self, attack, atk_force)
 	# Prevents the unit from doing other actions
@@ -296,10 +313,13 @@ func attack_unit(defender: Unit):
 	if health <= 0:
 		health = 0
 		game.remove_unit(self)
+		return
 	damaged.emit()
 	# Runs through attributes if it survives
+	logger.indent('troop')
 	for attr in attributes:
 		attr.on_attack(defender)
+	logger.dedent('troop')
 	if not can_act and not can_attack and not can_move:
 		game.troop_toggle_act.emit(self)
 
@@ -308,6 +328,8 @@ func move(destination: Vector2i):
 	if not can_move or game.board.units[destination.x][destination.y] != null:
 		return
 	# Moves the unit
+	logger.log('troop', 'Troop %s moving (%d, %d) -> (%d, %d)' %
+		[base_stats.name, pos.x, pos.y, destination.x, destination.y])
 	var from: Vector2i = Vector2i(pos.x, pos.y)
 	game.board.units[from.x][from.y] = null
 	game.board.units[destination.x][destination.y] = self
@@ -327,6 +349,7 @@ func move(destination: Vector2i):
 	can_attack = false
 	can_move = false
 	# Emits the move signal
+	logger.indent('troop')
 	var path: Array = move_graph[destination]
 	clear_fog()
 	game.troop_moved.emit(self, path)
@@ -336,16 +359,21 @@ func move(destination: Vector2i):
 	# Emits the done signal
 	if not can_act and not can_attack and not can_move:
 		game.troop_toggle_act.emit(self)
+	logger.dedent('troop')
 
 ## Clears data which is generated on selection
 func clear():
+	logger.debug('troop', 'Clearing data for troop %s' % [base_stats.name])
 	move_graph = {}
 	attack_list = {}
 	actions = []
 
 ## Resets a troop at the end of a turn
 func reset(prev: int, player: Player):
-	print('ended turn!')
+	if player.local_id != owned_by:
+		return
+	logger.debug('troop', 'Resetting troop %s at (%d, %d)' % [base_stats.name, pos.x, pos.y])
+	logger.indent('troop')
 	clear()
 	# Resets abilities
 	can_move = true
@@ -359,10 +387,11 @@ func reset(prev: int, player: Player):
 	# Runs through attributes
 	for attr in attributes:
 		attr.reset()
-	# game.troop_toggle_act(self)
+	logger.dedent('troop')
 
 ## Builds the troop's action list
 func build_action_list():
+	logger.debug('troop', 'Troop %s at (%d, %d) is building action list' % [base_stats.name, pos.x, pos.y])
 	actions = []
 	if not can_act:
 		return
@@ -394,6 +423,7 @@ func claim_territory():
 ## Runs a certain action
 ## Returns whether or not the action needs to wait on player input.
 func act(index: int) -> bool:
+	logger.log('troop', 'Running action %d of troop %s at (%d, %d)' % [index, base_stats.name, pos.x, pos.y])
 	if index >= len(actions):
 		return false
 	elif not can_act:
@@ -404,4 +434,6 @@ func act(index: int) -> bool:
 	var input_needed = actions[index].execute()
 	if not can_act and not can_attack and not can_move:
 		game.troop_toggle_act.emit(self)
+	if input_needed:
+		logger.log('troop', 'Waiting on input for action...')
 	return input_needed

@@ -38,8 +38,12 @@ enum States {
 ## The current state of the game
 var state: States = States.DEFAULT
 
+@onready var logger = get_node('/root/DebugLog')
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	# Sets up the logger
+	assert(logger.from_json('Debug Logs/log_settings.json'))
 	# Creates a new game if one is not found
 	if save_data == null:
 		game.create_new()
@@ -72,6 +76,8 @@ func _ready():
 ## Loads a game from a save file.
 func load_game():
 	var board: Board = game.board
+	logger.log('game', 'Starting game on player %s\'s turn' % [board.players[board.current_player].name])
+	logger.indent('game')
 	# Renders all of the cities on the board
 	for row in board.buildings:
 		for building in row:
@@ -122,6 +128,8 @@ func on_card_selected(card_index: int):
 func on_card_deselected():
 	# Exits card_selected state
 	move_renderer.clear()
+	active_unit.delete_references()
+	active_unit = null
 	state = States.DEFAULT
 		
 ## Called when a tile is clicked
@@ -213,6 +221,8 @@ func on_turn_ended(prev_player: int, current_player: Player):
 	action_input_wait = false
 	# Sets state to default
 	state = States.DEFAULT
+	# Saves the game
+	on_save_game()
 	# Deselects any active units
 	deselect_unit()
 	
