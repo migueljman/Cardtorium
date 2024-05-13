@@ -14,7 +14,7 @@
 bg_color = Color(0.992157, 1, 0, 1)
 
 [node name="MarginContainer" type="MarginContainer"]
-texture_filter = 2
+texture_filter = 4
 custom_minimum_size = Vector2(1280, 1560)
 anchors_preset = 8
 anchor_left = 0.5
