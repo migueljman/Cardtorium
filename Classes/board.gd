@@ -83,6 +83,7 @@ func setup(wid: int, height: int, _num_players: int):
 	# Vector2i(0,SIZE.y / 2), 
 	# Vector2i(SIZE.x - 1,SIZE.y / 2), 
 	# TODO the name should be read from somewhere else, maybe the main menu
-	players[0].name = "Player_0"
-	players[1].name = "Player_1"
+	players[0].name = PlayerInfo.p1_name
+	players[1].name = PlayerInfo.p2_name
+	
 	num_players = _num_players
