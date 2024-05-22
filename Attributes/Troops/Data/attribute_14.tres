@@ -5,6 +5,6 @@
 [resource]
 script = ExtResource("1_c4q31")
 name = "Surge"
-description = "Perform an attack that damages units in a 2-tile radius; once used this unit cannot act for 3 turns"
+description = "Perform an attack that damages units in a 2-tile radius; once used this unit cannot act for 1 turns"
 id = 14
 abbreviation = "SURGE"
