@@ -1,0 +1,87 @@
+[gd_scene load_steps=2 format=3 uid="uid://c4tg8cdlj4wy8"]
+
+[ext_resource type="Script" path="res://Scenes/Player_Info/player_info.gd" id="1_6njql"]
+
+[node name="player2_info" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_6njql")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Name" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Name"]
+custom_minimum_size = Vector2(150, 30)
+layout_mode = 2
+text = "Player2 Name:"
+
+[node name="Input" type="LineEdit" parent="MarginContainer/VBoxContainer/Name"]
+custom_minimum_size = Vector2(350, 30)
+layout_mode = 2
+placeholder_text = "Enter your desired display name here..."
+context_menu_enabled = false
+clear_button_enabled = true
+shortcut_keys_enabled = false
+middle_mouse_paste_enabled = false
+drag_and_drop_selection_enabled = false
+
+[node name="Deck" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Deck"]
+custom_minimum_size = Vector2(150, 30)
+layout_mode = 2
+text = "Player Deck:"
+
+[node name="Input" type="OptionButton" parent="MarginContainer/VBoxContainer/Deck"]
+custom_minimum_size = Vector2(350, 30)
+layout_mode = 2
+
+[node name="Imperator" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Imperator"]
+custom_minimum_size = Vector2(150, 30)
+layout_mode = 2
+text = "Player Imperator:"
+
+[node name="Input" type="OptionButton" parent="MarginContainer/VBoxContainer/Imperator"]
+custom_minimum_size = Vector2(350, 30)
+layout_mode = 2
+
+[node name="Terrain" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Terrain"]
+custom_minimum_size = Vector2(150, 30)
+layout_mode = 2
+text = "Player Terrain:"
+
+[node name="Input" type="OptionButton" parent="MarginContainer/VBoxContainer/Terrain"]
+custom_minimum_size = Vector2(350, 30)
+layout_mode = 2
+
+[node name="Done" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Done" type="Button" parent="MarginContainer/VBoxContainer/Done"]
+layout_mode = 2
+text = "Done"

@@ -40,8 +40,8 @@ func create_new():
 	logger.log('game', 'Creating a new game')
 	board = Board.new()
 	# Creates a new board of size 11 x 11
-	var width = 7
-	var height = 7
+	var width = 11
+	var height = 11
 	board.setup(width, height, 2)
 	# for i in range(len(board.players)):
 	# 	board.players[i].setup()

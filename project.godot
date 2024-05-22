@@ -17,6 +17,7 @@ config/features=PackedStringArray("4.2", "GL Compatibility")
 [autoload]
 
 DebugLog="*res://Classes/debug.gd"
+PlayerInfo="*res://Scenes/Player_Info/final_info.gd"
 
 [display]
 
