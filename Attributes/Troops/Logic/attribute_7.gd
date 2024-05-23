@@ -42,3 +42,4 @@ func heal_on_tile(tile: Vector2i):
 	logger.log('troop_attribute', '(DOCTOR) Healing troop %s at (%d, %d)' % [ally.base_stats.name, ally.pos.x, ally.pos.y])
 	var amount: int = parent.health / 2
 	ally.health = clampi(ally.health + amount, 0, ally.base_stats.health)
+	ally.damaged.emit()
