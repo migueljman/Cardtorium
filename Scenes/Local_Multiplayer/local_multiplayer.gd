@@ -179,6 +179,8 @@ func on_selected_tile(pos: Vector2i):
 func select_unit(unit: Unit):
 	if unit == null:
 		return
+	game.update_unit_info.emit(unit)
+	game.display_unit_info.emit()
 	if unit.owned_by != game.board.current_player:
 		return
 	if unit is Troop:
@@ -202,6 +204,7 @@ func select_unit(unit: Unit):
 
 ## Deselects a unit
 func deselect_unit():
+	game.hide_unit_info.emit()
 	if active_unit is Troop:
 		active_unit.clear()
 	# Clears action bar

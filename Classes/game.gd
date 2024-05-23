@@ -20,6 +20,12 @@ signal troop_moved(troop: Troop, path: Array)
 signal unit_removed(unit: Unit)
 ## Emitted right before (or maybe after) player's turn switches over
 signal render_topbar(turn: int, player: Player)
+## Emitted when a unit is selected
+signal update_unit_info(unit: Unit)
+## Emitted when a unit is selected
+signal display_unit_info()
+## Emitted when the unit info popup should be cleared
+signal hide_unit_info()
 ## Emitted when a city is placed
 signal city_placed(city: City)
 ## Emitted when a player claims territory
