@@ -27,16 +27,12 @@ func _on_game_update_unit_info(unit: Unit):
 		# Done this way right now because you can only pass strings through meta tags
 		# This also assumes a hard cap of max 4 attributes for a troop
 		if count == 0:
-			print(count)
 			actl_ret += "\n[url=0]%s[/url]"
 		elif count == 1:
-			print(count)
 			actl_ret += "\n[url=1]%s[/url]"
 		elif count == 2:
-			print(count)
 			actl_ret += "\n[url=2]%s[/url]"
 		elif count == 3:
-			print(count)
 			actl_ret += "\n[url=3]%s[/url]"
 		count += 1
 
@@ -47,7 +43,6 @@ func _on_game_update_unit_info(unit: Unit):
 
 
 func _on_meta_clicked(meta):
-	print(meta)
 	var attr = attrs[int(meta)].attribute
 	var form_ret: String
 	var actl_ret: String

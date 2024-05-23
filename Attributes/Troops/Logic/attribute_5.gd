@@ -24,8 +24,9 @@ func apply_splash_damage(defender: Troop):
 	var def_force = defender.defense * float(defender.health)/float(defender.base_stats.health)
 	var damage = (atk_force / (atk_force+def_force)) * parent.attack
 	var splash_damage: int = floor(damage / 2.0)
-
+	
 	defender.health -= splash_damage
+	defender.damaged.emit()
 	if defender.health <= 0:
 		defender.health = 0
 		parent.game.remove_unit(defender)
