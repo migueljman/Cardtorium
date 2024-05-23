@@ -1215,7 +1215,7 @@ unresizable = false
 min_size = Vector2i(50, 50)
 script = ExtResource("11_goknh")
 
-[node name="RichTextLabel" type="RichTextLabel" parent="GUI_Renderer/Control/UnitInfo"]
+[node name="UnitInfo" type="RichTextLabel" parent="GUI_Renderer/Control/UnitInfo"]
 custom_minimum_size = Vector2(140, 0)
 anchors_preset = 8
 anchor_left = 0.5
@@ -1223,8 +1223,8 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -140.0
-offset_top = -20.0
-offset_bottom = 20.0
+offset_top = -30.0
+offset_bottom = 10.0
 grow_horizontal = 2
 grow_vertical = 2
 bbcode_enabled = true
@@ -1260,9 +1260,10 @@ script = ExtResource("17_ls0ak")
 [connection signal="troop_placed" from="Game" to="." method="render_troop"]
 [connection signal="turn_ended" from="Game" to="GUI_Renderer/HandRenderer" method="switch_hands"]
 [connection signal="turn_ended" from="Game" to="FogRenderer" method="switch_players"]
-[connection signal="update_unit_info" from="Game" to="GUI_Renderer/Control/UnitInfo/RichTextLabel" method="_on_game_update_unit_info"]
+[connection signal="update_unit_info" from="Game" to="GUI_Renderer/Control/UnitInfo/UnitInfo" method="_on_game_update_unit_info"]
 [connection signal="attempt_place_city" from="Camera2D" to="." method="_on_camera_2d_attempt_place_city"]
 [connection signal="card_deselected" from="GUI_Renderer/HandRenderer" to="." method="on_card_deselected"]
 [connection signal="mouse_entered" from="GUI_Renderer/HandRenderer" to="Camera2D" method="_on_hand_renderer_mouse_entered"]
 [connection signal="mouse_exited" from="GUI_Renderer/HandRenderer" to="Camera2D" method="_on_hand_renderer_mouse_exited"]
 [connection signal="pressed" from="GUI_Renderer/Control/ActionBar/MarginContainer/ColorRect/MarginContainer/HBoxContainer/End_Turn" to="Game" method="end_turn"]
+[connection signal="meta_clicked" from="GUI_Renderer/Control/UnitInfo/UnitInfo" to="GUI_Renderer/Control/UnitInfo/UnitInfo" method="_on_meta_clicked"]
