@@ -1251,7 +1251,9 @@ format = 2
 script = ExtResource("17_ls0ak")
 
 [connection signal="city_placed" from="Game" to="." method="render_city"]
+[connection signal="display_extra_info" from="Game" to="GUI_Renderer/Control/UnitInfo" method="_on_game_display_unit_info"]
 [connection signal="display_unit_info" from="Game" to="GUI_Renderer/Control/UnitInfo" method="_on_game_display_unit_info"]
+[connection signal="hide_extra_info" from="Game" to="GUI_Renderer/Control/UnitInfo" method="_on_game_hide_unit_info"]
 [connection signal="hide_unit_info" from="Game" to="GUI_Renderer/Control/UnitInfo" method="_on_game_hide_unit_info"]
 [connection signal="input_requested" from="Game" to="." method="_on_game_input_requested"]
 [connection signal="render_topbar" from="Game" to="GUI_Renderer/Control/TopBar/ColorRect/RichTextLabel" method="_on_game_render_topbar"]
@@ -1260,10 +1262,12 @@ script = ExtResource("17_ls0ak")
 [connection signal="troop_placed" from="Game" to="." method="render_troop"]
 [connection signal="turn_ended" from="Game" to="GUI_Renderer/HandRenderer" method="switch_hands"]
 [connection signal="turn_ended" from="Game" to="FogRenderer" method="switch_players"]
+[connection signal="update_extra_info" from="Game" to="GUI_Renderer/Control/UnitInfo/UnitInfo" method="_on_game_update_extra_info"]
 [connection signal="update_unit_info" from="Game" to="GUI_Renderer/Control/UnitInfo/UnitInfo" method="_on_game_update_unit_info"]
 [connection signal="attempt_place_city" from="Camera2D" to="." method="_on_camera_2d_attempt_place_city"]
 [connection signal="card_deselected" from="GUI_Renderer/HandRenderer" to="." method="on_card_deselected"]
 [connection signal="mouse_entered" from="GUI_Renderer/HandRenderer" to="Camera2D" method="_on_hand_renderer_mouse_entered"]
 [connection signal="mouse_exited" from="GUI_Renderer/HandRenderer" to="Camera2D" method="_on_hand_renderer_mouse_exited"]
 [connection signal="pressed" from="GUI_Renderer/Control/ActionBar/MarginContainer/ColorRect/MarginContainer/HBoxContainer/End_Turn" to="Game" method="end_turn"]
+[connection signal="meta_clicked" from="GUI_Renderer/Control/TopBar/ColorRect/RichTextLabel" to="GUI_Renderer/Control/TopBar/ColorRect/RichTextLabel" method="_on_meta_clicked"]
 [connection signal="meta_clicked" from="GUI_Renderer/Control/UnitInfo/UnitInfo" to="GUI_Renderer/Control/UnitInfo/UnitInfo" method="_on_meta_clicked"]

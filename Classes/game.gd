@@ -26,6 +26,12 @@ signal update_unit_info(unit: Unit)
 signal display_unit_info()
 ## Emitted when the unit info popup should be cleared
 signal hide_unit_info()
+## Emitted when the info button on the top bar is clicked
+signal update_extra_info(game: Game)
+## Emitted when the info button on the top bar is clicked
+signal display_extra_info()
+## Emitted when the extra info should be cleared
+signal hide_extra_info()
 ## Emitted when a city is placed
 signal city_placed(city: City)
 ## Emitted when a player claims territory
