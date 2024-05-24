@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://cpjc8y8la6h8n"]
+[gd_scene load_steps=36 format=3 uid="uid://cpjc8y8la6h8n"]
 
 [ext_resource type="Script" path="res://Classes/game.gd" id="1_cv5ps"]
 [ext_resource type="Script" path="res://Scenes/Local_Multiplayer/local_multiplayer.gd" id="1_w84yu"]
@@ -15,7 +15,9 @@
 [ext_resource type="Texture2D" uid="uid://bgtd17unyo5em" path="res://Assets/UI/outline.png" id="10_j1qfw"]
 [ext_resource type="Script" path="res://Scenes/Local_Multiplayer/MoveRender.gd" id="11_0mh2y"]
 [ext_resource type="Texture2D" uid="uid://bfwcvluxqghk2" path="res://Assets/Tiles/thick-outline.png" id="11_bs2bu"]
+[ext_resource type="Script" path="res://Scenes/Local_Multiplayer/UnitInfo.gd" id="11_goknh"]
 [ext_resource type="Script" path="res://Scenes/Local_Multiplayer/FogRenderer.gd" id="11_i2gk8"]
+[ext_resource type="Script" path="res://Scenes/Local_Multiplayer/UnitInfoTextLabel.gd" id="11_l1eua"]
 [ext_resource type="Texture2D" uid="uid://ce1n5pqllq7im" path="res://Assets/Tiles/thick-red-outline.png" id="14_e153n"]
 [ext_resource type="Texture2D" uid="uid://be23a1x2ski3m" path="res://Assets/Tiles/territory_0.png" id="14_xbgac"]
 [ext_resource type="Texture2D" uid="uid://bbbd3sx1ju4on" path="res://Assets/Tiles/territory_1.png" id="15_8kp7k"]
@@ -1205,6 +1207,30 @@ theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 bbcode_enabled = true
 script = ExtResource("7_v6a8q")
 
+[node name="UnitInfo" type="Popup" parent="GUI_Renderer/Control"]
+position = Vector2i(1000, 29)
+size = Vector2i(280, 100)
+visible = true
+unresizable = false
+min_size = Vector2i(50, 50)
+script = ExtResource("11_goknh")
+
+[node name="UnitInfo" type="RichTextLabel" parent="GUI_Renderer/Control/UnitInfo"]
+custom_minimum_size = Vector2(140, 0)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -140.0
+offset_top = -30.0
+offset_bottom = 10.0
+grow_horizontal = 2
+grow_vertical = 2
+bbcode_enabled = true
+fit_content = true
+script = ExtResource("11_l1eua")
+
 [node name="FogRenderer" type="TileMap" parent="."]
 z_index = 10
 tile_set = SubResource("TileSet_ael6n")
@@ -1225,6 +1251,8 @@ format = 2
 script = ExtResource("17_ls0ak")
 
 [connection signal="city_placed" from="Game" to="." method="render_city"]
+[connection signal="display_unit_info" from="Game" to="GUI_Renderer/Control/UnitInfo" method="_on_game_display_unit_info"]
+[connection signal="hide_unit_info" from="Game" to="GUI_Renderer/Control/UnitInfo" method="_on_game_hide_unit_info"]
 [connection signal="input_requested" from="Game" to="." method="_on_game_input_requested"]
 [connection signal="render_topbar" from="Game" to="GUI_Renderer/Control/TopBar/ColorRect/RichTextLabel" method="_on_game_render_topbar"]
 [connection signal="terrain_updated" from="Game" to="TerrainRenderer" method="render"]
@@ -1232,8 +1260,10 @@ script = ExtResource("17_ls0ak")
 [connection signal="troop_placed" from="Game" to="." method="render_troop"]
 [connection signal="turn_ended" from="Game" to="GUI_Renderer/HandRenderer" method="switch_hands"]
 [connection signal="turn_ended" from="Game" to="FogRenderer" method="switch_players"]
+[connection signal="update_unit_info" from="Game" to="GUI_Renderer/Control/UnitInfo/UnitInfo" method="_on_game_update_unit_info"]
 [connection signal="attempt_place_city" from="Camera2D" to="." method="_on_camera_2d_attempt_place_city"]
 [connection signal="card_deselected" from="GUI_Renderer/HandRenderer" to="." method="on_card_deselected"]
 [connection signal="mouse_entered" from="GUI_Renderer/HandRenderer" to="Camera2D" method="_on_hand_renderer_mouse_entered"]
 [connection signal="mouse_exited" from="GUI_Renderer/HandRenderer" to="Camera2D" method="_on_hand_renderer_mouse_exited"]
 [connection signal="pressed" from="GUI_Renderer/Control/ActionBar/MarginContainer/ColorRect/MarginContainer/HBoxContainer/End_Turn" to="Game" method="end_turn"]
+[connection signal="meta_clicked" from="GUI_Renderer/Control/UnitInfo/UnitInfo" to="GUI_Renderer/Control/UnitInfo/UnitInfo" method="_on_meta_clicked"]

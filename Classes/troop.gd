@@ -3,6 +3,8 @@ extends Unit
 ## Class which represents a troop on the board.
 class_name Troop
 
+## The troop name
+@export var name: String
 ## The troop id
 @export var id: int = 0
 ## Whether or not the troop can move
@@ -41,6 +43,7 @@ func from_card(_game: Game, card: Card):
 	logger.indent('troop')
 	self.game = _game
 	self.id = card.id
+	self.name = card.name
 	self.base_stats = card
 	attack = base_stats.attack
 	defense = base_stats.defense
