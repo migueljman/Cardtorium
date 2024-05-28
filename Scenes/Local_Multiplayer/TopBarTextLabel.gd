@@ -15,7 +15,12 @@ func escape_bbcode(bbcode_text):
 func _on_game_render_topbar(turn: int, player: Player):
 	var form_ret: String
 	var actl_ret: String
-	form_ret = "[center]Turn: %d\t\t\t\t\t\tPlayer: %s\t\t\t\t\t\tResources: %d\t\t\t\t\t\tRpT: %d\t\t\t\t\t\tTerritory Owned: %d\t\t\t\t\t\tCities: %d/%d\t\t\t\t\t\t[/center]"
+	form_ret = "[center]Turn: %d\t\t\t\t\t\tPlayer: %s\t\t\t\t\t\tResources: %d\t\t\t\t\t\tRpT: %d\t\t\t\t\t\tTerritory Owned: %d\t\t\t\t\t\tCities: %d/%d\t\t\t\t\t\t[url] ( [i]i[/i] ) [/url][/center]"
 	actl_ret = form_ret % [turn, escape_bbcode(player.name), player.resources, player.rpt, player.territory, player.cities, player.max_cities]
 	
 	set_text(actl_ret)
+
+
+func _on_meta_clicked(meta):
+	game.update_extra_info.emit(game)
+	game.display_extra_info.emit()

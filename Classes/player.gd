@@ -39,6 +39,9 @@ signal fog_placed(tiles: Array[Vector2i])
 @export var territory: int
 ## Max number of cities that the player can place
 @export var max_cities: int = 1
+## Used to print debug messages
+var logger
+
 
 ## Creates a new player resource from scratch
 func _init(board_size: Vector2i = Vector2i(0, 0), _deck: Array[Card] = []):
@@ -56,6 +59,7 @@ func _init(board_size: Vector2i = Vector2i(0, 0), _deck: Array[Card] = []):
 ## Sets up player data
 func setup(game: Game, base_position: Vector2i, index: int):
 	self.base_position = base_position
+	logger = game.logger
 	var board_size = game.board.SIZE
 	# Clears the fog in a 2-tile radius around the home base
 	for x in range(base_position.x - 2, base_position.x + 3):
@@ -77,8 +81,13 @@ func setup(game: Game, base_position: Vector2i, index: int):
 	game.place_city(base_position)
 	cities = 1
 
+## Connects a logging object when loading the game
+func setup_on_load(game: Game):
+	logger = game.logger
+
 ## Called right before the player's turn begins
 func begin_turn():
+	logger.log('player', 'Setting up player %d to start their turn' % local_id)
 	# Increments resources
 	resources += rpt
 	# Sets hand size
@@ -95,12 +104,14 @@ func begin_turn():
 
 ## Clears the fog from an array of tiles
 func clear_fog(tiles: Array[Vector2i]):
+	logger.log('player', 'Clearing %d fog tiles for player %d' % [len(tiles), local_id])
 	for tile in tiles:
 		self.discovered[tile.x][tile.y] = true
 	fog_cleared.emit(tiles)
 
 ## Puts the fog back (may be used for a spell in the future)
 func add_fog(tiles: Array[Vector2i]):
+	logger.log('player', 'Putting back %d fog tiles for player %d' % [len(tiles), local_id])
 	for tile in tiles:
 		self.discovered[tile.x][tile.y] = false
 	fog_placed.emit(tiles)
@@ -120,6 +131,7 @@ func shuffle_card(card: Card):
 		place_threshold += thresh_inc
 		random = randf()
 		pos -= 1
+	logger.debug('player', 'Moved card (%s) to position %d in the deck' % [card.name, pos])
 	# Places the card at the location
 	self.deck.insert(pos, card)
 
@@ -129,6 +141,7 @@ func remove_from_hand(index: int):
 	var old_hand: Array[Card] = []
 	for card in hand:
 		old_hand.append(card)
+	logger.debug('player', 'Removing %d card from hand' % index)
 	var card: Card = self.hand.pop_at(index)
 	self.resources -= card.cost
 	cards_removed.emit(old_hand, hand)
@@ -142,6 +155,7 @@ func place_city(game: Game, pos: Vector2i):
 
 ## Runs calculations which depend on territory
 func run_territory_calculations():
-	rpt = 2 + (territory / 20)
-	max_cities = 1 + (territory / 15)
-	hand_size = max(5, 1 + (territory / 15))
+	logger.debug('player', 'Player %d is running territory calculations' % local_id)
+	rpt = 2 + (territory / 10)
+	max_cities = 1 + (territory / 20)
+	hand_size = max(5, 1 + (territory / 20))

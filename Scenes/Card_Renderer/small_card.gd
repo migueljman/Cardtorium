@@ -1,0 +1,61 @@
+extends MarginContainer
+var is_selected = false
+var card: Card
+
+var card_index: int
+signal card_focused(card_index)
+signal card_unfocused(card_index)
+signal card_clicked(card_index)
+
+# Add a dictionary to store whether a card is rendered on a tile
+var cards_on_tiles = {}
+
+'''
+RARITY NAME COLORS:
+- COMMON = BLACK (#000000)
+- UNCOMMON = GREEN (#00f800)
+- RARE = BLUE (#15ffed)
+- EPIC = HOT PINK (#f600ff)
+- LEGNEDARY = GOLD (#fdff00)
+
+CARD TYPE BACKGROUND COLORS:
+- TROOP = GREEN (#5f8352)
+- SPELL = BLUE (#288784)
+- BUILDING = TAN (#e9b996)
+
+FACTION BORDER COLORS:
+- IMPERIUM = GOLD (#fdff00)
+
+'''
+
+# STATS
+@onready var atk = $MarginContainer/VBoxContainer/Stat_Container/ATK_Container/ATK
+@onready var def = $MarginContainer/VBoxContainer/Stat_Container/DEF_Container/DEF
+@onready var hp = $MarginContainer/VBoxContainer/Stat_Container/HP_Container/HP
+@onready var range = $MarginContainer/VBoxContainer/Stat_Container/RANGE_Container/Range
+@onready var move = $MarginContainer/VBoxContainer/Stat_Container/MOVE_Container/Move
+@onready var card_name = $MarginContainer/VBoxContainer/Name
+@onready var cost = $MarginContainer/VBoxContainer/Stat_Container/COST_Container/CostArea/Cost
+# MAX 30 WORD DESCRIPTIONS
+
+
+func setup(_card: Card, _card_index: int):
+	card = _card
+	card_index = _card_index
+	atk.text = str(card.attack)
+	def.text = str(card.defense)
+	hp.text = str(card.health)
+	range.text = str(card.attack_range)
+	move.text = str(card.movement)
+	card_name.text = card.name
+	cost.text = str(card.cost)
+
+## Mouse hover on card
+func _on_focus_mouse_entered():
+	card_focused.emit(card_index)
+## Mouse hover off card
+func _on_focus_mouse_exited():
+	card_unfocused.emit(card_index)
+## Mouse click on card
+func _on_focus_pressed():
+	card_clicked.emit(card_index)

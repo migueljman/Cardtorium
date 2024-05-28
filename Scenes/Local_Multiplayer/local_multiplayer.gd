@@ -39,8 +39,12 @@ enum States {
 ## The current state of the game
 var state: States = States.DEFAULT
 
+@onready var logger = get_node('/root/DebugLog')
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	# Sets up the logger
+	assert(logger.from_json('Debug Logs/log_settings.json'))
 	# Creates a new game if one is not found
 	if save_data == null:
 		game.create_new()
@@ -73,6 +77,8 @@ func _ready():
 ## Loads a game from a save file.
 func load_game():
 	var board: Board = game.board
+	logger.log('game', 'Starting game on player %s\'s turn' % [board.players[board.current_player].name])
+	logger.indent('game')
 	# Renders all of the cities on the board
 	for row in board.buildings:
 		for building in row:
@@ -123,11 +129,14 @@ func on_card_selected(card_index: int):
 func on_card_deselected():
 	# Exits card_selected state
 	move_renderer.clear()
+	active_unit.delete_references()
+	active_unit = null
 	state = States.DEFAULT
 		
 ## Called when a tile is clicked
 ## Behavior depends on the state
 func on_selected_tile(pos: Vector2i):
+	game.hide_extra_info.emit()
 	# Checks that the tile is in bounds. If not, return
 	if (pos.x < 0 or pos.y < 0 or pos.x >= game.board.SIZE.x or pos.y >= game.board.SIZE.y):
 		return
@@ -172,6 +181,8 @@ func on_selected_tile(pos: Vector2i):
 func select_unit(unit: Unit):
 	if unit == null:
 		return
+	game.update_unit_info.emit(unit)
+	game.display_unit_info.emit()
 	if unit.owned_by != game.board.current_player:
 		return
 	if unit is Troop:
@@ -195,6 +206,7 @@ func select_unit(unit: Unit):
 
 ## Deselects a unit
 func deselect_unit():
+	game.hide_unit_info.emit()
 	if active_unit is Troop:
 		active_unit.clear()
 	# Clears action bar
@@ -214,6 +226,8 @@ func on_turn_ended(prev_player: int, current_player: Player):
 	action_input_wait = false
 	# Sets state to default
 	state = States.DEFAULT
+	# Saves the game
+	on_save_game()
 	# Deselects any active units
 	deselect_unit()
 	
