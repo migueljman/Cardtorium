@@ -298,9 +298,9 @@ func being_attacked(attacker: Unit, atk: int, attack_force: float) -> int:
 	logger.log('troop', 'Troop %s at (%d, %d) is counter-attacking' % [base_stats.name, pos.x, pos.y])
 	# Calculates counter damage
 	var counter_damage: int = 0
-	if  (attacker.pos.x in range(pos.x - rng, pos.x + rng)) and (attacker.pos.y in range(pos.y - rng, pos.y + rng)):
+	if  (attacker.pos.x in range(pos.x - rng, pos.x + rng + 1)) and (attacker.pos.y in range(pos.y - rng, pos.y + rng + 1)):
 		counter_damage = floor((def_force / (attack_force + def_force)) * defense)
-
+	
 	return counter_damage
 
 ## Attacks another unit

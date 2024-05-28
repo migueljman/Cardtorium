@@ -135,6 +135,7 @@ func on_card_deselected():
 ## Called when a tile is clicked
 ## Behavior depends on the state
 func on_selected_tile(pos: Vector2i):
+	game.hide_extra_info.emit()
 	# Checks that the tile is in bounds. If not, return
 	if (pos.x < 0 or pos.y < 0 or pos.x >= game.board.SIZE.x or pos.y >= game.board.SIZE.y):
 		return
