@@ -96,6 +96,15 @@ func place_unit(unit: Unit, x: int, y: int):
 			board.units[x][y] = unit
 			unit.pos = Vector2i(x, y)
 			unit.owned_by = board.current_player
+			unit.clear_fog()
+			# START CHECK FOR WIN CON
+			var opponent
+			if board.current_player == 0: opponent = board.players[1]
+			else: opponent = board.players[0]
+			if unit.pos == opponent.base_position:
+				win_screen()
+				return
+			# END CHECK FOR WIN CON
 			troop_placed.emit(unit, Vector2i(x, y))
 		Card.CardType.BUILDING:
 			board.buildings[x][y] = unit
