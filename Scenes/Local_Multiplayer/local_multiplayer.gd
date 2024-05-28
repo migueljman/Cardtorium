@@ -1,6 +1,7 @@
 extends Node2D
 
 var troop_scene = preload ("res://Scenes/Rendering/rendered_troop.tscn")
+var building_scene = preload('res://Scenes/Rendering/rendered_building.tscn')
 var card: Card
 
 ## The size of a tile in pixels
@@ -259,7 +260,6 @@ func _on_game_input_requested(options: Array[Vector2i]):
 	valid_tiles = options
 	move_renderer.draw_black_outlines(options)
 
-
 ## Called when the user attemps to place a city
 func _on_camera_2d_attempt_place_city(pos:Vector2i):
 	if state != States.DEFAULT:
@@ -283,3 +283,10 @@ func _on_camera_2d_attempt_place_city(pos:Vector2i):
 			elif board.buildings[x][y] != null and board.buildings[x][y] is City:
 				return
 	player.place_city(game, pos)
+
+## Called when the player places a building
+func render_building(building: Building, pos: Vector2i):
+	var instance = building_scene.instantiate()
+	instance.prepare_for_render(building, game)
+	instance.position = Vector2(pos) * TILE_SIZE
+	add_child.call_deferred(instance)

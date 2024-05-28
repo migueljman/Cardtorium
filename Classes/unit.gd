@@ -47,7 +47,7 @@ func being_attacked(attacker: Unit, attack: int, attack_force: float) -> int:
 ## Returns a list of tiles that the unit can be placed on.
 ## Used to highlight squares that the troop can be placed on.
 ## TODO: Possibly add support for an attribute which modifies this method
-func get_placeable_tiles():
+func get_placeable_tiles() -> Array[Vector2i]:
     if base_stats.cost > game.board.players[game.board.current_player].resources:
         return [] as Array[Vector2i]
     var tiles: Array[Vector2i] = []

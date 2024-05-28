@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Attribute" load_steps=2 format=3 uid="uid://bexsxlid7swj5"]
+
+[ext_resource type="Script" path="res://Classes/attribute.gd" id="1_8t2o0"]
+
+[resource]
+script = ExtResource("1_8t2o0")
+name = "Barrier"
+description = "Prevents troops without fly from moving past it"
+id = 1
+abbreviation = "BARR"

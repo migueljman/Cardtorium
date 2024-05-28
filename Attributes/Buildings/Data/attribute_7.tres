@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Attribute" load_steps=2 format=3 uid="uid://b6k1d4orsvcou"]
+
+[ext_resource type="Script" path="res://Classes/attribute.gd" id="1_h8xd1"]
+
+[resource]
+script = ExtResource("1_h8xd1")
+name = "Owie"
+description = "Adds an action which damages enemy troops in a 2-tile radius"
+id = 7
+abbreviation = "OWIE"

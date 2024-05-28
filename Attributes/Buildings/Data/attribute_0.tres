@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Attribute" load_steps=2 format=3 uid="uid://yj0hbdymjsk1"]
+
+[ext_resource type="Script" path="res://Classes/attribute.gd" id="1_5fa04"]
+
+[resource]
+script = ExtResource("1_5fa04")
+name = "Defendable"
+description = "Troops with fortify get a x1.25 defense bonus"
+id = 0
+abbreviation = "DEFABL"

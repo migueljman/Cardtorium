@@ -393,6 +393,7 @@ func reset(prev: int, player: Player):
 	# Runs through attributes
 	for attr in attributes:
 		attr.reset()
+	# game.troop_toggle_act.emit(self)
 	logger.dedent('troop')
 
 ## Builds the troop's action list

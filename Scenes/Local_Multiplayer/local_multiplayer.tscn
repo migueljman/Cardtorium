@@ -1250,6 +1250,7 @@ tile_set = SubResource("TileSet_lx3aq")
 format = 2
 script = ExtResource("17_ls0ak")
 
+[connection signal="building_placed" from="Game" to="." method="render_building"]
 [connection signal="city_placed" from="Game" to="." method="render_city"]
 [connection signal="display_extra_info" from="Game" to="GUI_Renderer/Control/UnitInfo" method="_on_game_display_unit_info"]
 [connection signal="display_unit_info" from="Game" to="GUI_Renderer/Control/UnitInfo" method="_on_game_display_unit_info"]
